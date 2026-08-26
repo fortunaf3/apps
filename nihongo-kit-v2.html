@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0E1116">
+<title>日本語 Kit · Tae Kim Ch.3</title>
+<style>
+  :root{
+    --ink:#0E1116; --panel:#161B24; --panel2:#1C232F; --line:#262E3B;
+    --paper:#E8E2D6; --muted:#8A94A6; --dim:#5A6373;
+    --shu:#E2574A; --ai:#7FA5E8; --matcha:#86C79B; --kincha:#E3B04B;
+    --jp:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Songti SC",serif;
+    --ui:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--ink);color:var(--paper);font-family:var(--ui);
+       min-height:100vh;padding-bottom:64px;line-height:1.5;font-size:15px}
+  button{font-family:inherit}
+  :focus-visible{outline:2px solid var(--ai);outline-offset:2px}
+
+  /* ---- seal / header ---- */
+  .seal{display:inline-flex;align-items:center;justify-content:center;
+        width:26px;height:26px;background:var(--shu);color:#0E1116;
+        font-family:var(--jp);font-size:16px;font-weight:700;
+        border-radius:3px;flex:0 0 auto}
+  .head{padding:20px 16px 16px;border-bottom:1px solid var(--line);
+        background:linear-gradient(180deg,#141A24 0%,var(--ink) 100%)}
+  .head-row{display:flex;align-items:center;gap:10px}
+  .head-title{font-family:var(--jp);font-size:26px;font-weight:700;letter-spacing:2px}
+  .head-sub{font-family:var(--mono);font-size:10px;letter-spacing:2.5px;
+            text-transform:uppercase;color:var(--dim);margin-top:8px}
+
+  /* ---- tabs ---- */
+  .tabs{display:flex;background:#12171F;border-bottom:1px solid var(--line);
+        position:sticky;top:0;z-index:20;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;padding:9px 13px 8px;border:0;background:transparent;color:var(--dim);
+       cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+  .tab .t-jp{display:block;font-family:var(--jp);font-size:15px;letter-spacing:1px}
+  .tab .t-en{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:1px;
+             text-transform:uppercase;margin-top:2px}
+  .tab.on{color:var(--paper);border-bottom-color:var(--shu);background:#182029}
+  .tab.on .t-jp{color:var(--shu)}
+
+  .wrap{padding:18px 14px 0;max-width:720px;margin:0 auto}
+  .hidden{display:none}
+
+  /* ---- section heads ---- */
+  .shead{display:flex;align-items:center;gap:10px;margin:22px 0 12px}
+  .shead:first-child{margin-top:0}
+  .shead h2{font-size:16px;font-weight:700;letter-spacing:.2px}
+  .shead .sub{font-family:var(--mono);font-size:10px;color:var(--dim);
+              letter-spacing:1.5px;text-transform:uppercase}
+  .rule{height:1px;background:var(--line);flex:1}
+
+  /* ---- generic card ---- */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+        padding:14px 15px;margin-bottom:10px}
+  .card.open{border-color:var(--shu)}
+
+  .note{background:#241C10;border-left:3px solid var(--kincha);border-radius:6px;
+        padding:9px 11px;margin-top:10px;font-size:13px;color:#F0D9A4;line-height:1.65}
+  .note b{color:var(--kincha)}
+  .warn{background:#251514;border-left:3px solid var(--shu);border-radius:6px;
+        padding:9px 11px;margin-top:10px;font-size:13px;color:#F3BDB7;line-height:1.65}
+
+  .ex{background:#0F141B;border-left:2px solid var(--ai);border-radius:6px;
+      padding:9px 11px;margin-top:8px}
+  .ex .jp{font-family:var(--jp);font-size:16px;line-height:1.9;color:var(--paper)}
+  .ex .en{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .ex .en:before{content:"→ ";color:var(--dim)}
+
+  .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;
+       text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+  .pill{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:1px;
+        text-transform:uppercase;padding:3px 7px;border-radius:4px;border:1px solid}
+  .p-n5{color:var(--matcha);border-color:#86C79B44;background:#86C79B14}
+  .p-ai{color:var(--ai);border-color:#7FA5E844;background:#7FA5E814}
+  .p-shu{color:var(--shu);border-color:#E2574A44;background:#E2574A14}
+
+  /* ---- particles ---- */
+  .par{display:flex;align-items:center;gap:12px;cursor:pointer}
+  .par-ch{font-family:var(--jp);font-size:34px;line-height:1;width:44px;text-align:center;
+          color:var(--shu);flex:0 0 auto}
+  .par-nm{font-size:15px;font-weight:700}
+  .par-fn{font-size:12.5px;color:var(--muted)}
+  .par-body{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+  .par-desc{font-size:14px;color:var(--paper);line-height:1.7;margin-bottom:4px}
+
+  /* ---- tables ---- */
+  .tbl{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+  .tbl th{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;
+          color:var(--dim);text-align:left;padding:5px 6px;border-bottom:1px solid var(--line);font-weight:400}
+  .tbl td{padding:8px 6px;border-bottom:1px solid #1E2531;vertical-align:top}
+  .tbl td:first-child{font-family:var(--mono);font-size:10px;color:var(--dim);
+                      text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;width:78px}
+  .tbl .f{font-family:var(--jp);font-size:16px;color:var(--paper);line-height:1.5}
+  .tbl .r{font-size:11px;color:var(--ai);display:block;margin-top:1px}
+  .tbl tr:last-child td{border-bottom:0}
+
+  .chip-row{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:3px}
+  .chip{flex:0 0 auto;padding:6px 12px;border-radius:16px;border:1px solid var(--line);
+        background:#12171F;color:var(--muted);font-size:12px;cursor:pointer;white-space:nowrap}
+  .chip.on{border-color:var(--shu);background:#E2574A1A;color:var(--shu);font-weight:700}
+
+  /* ---- kanji grid ---- */
+  .kgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .kc{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+      min-height:92px;cursor:pointer;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;transition:.15s;padding:8px}
+  .kc .kf{font-family:var(--jp);font-size:38px;line-height:1}
+  .kc.flip{background:#1B2330;border-color:var(--ai);align-items:flex-start;justify-content:flex-start}
+  .kc.flip .kf{font-size:20px;margin-bottom:4px}
+  .kc .ko{font-size:10.5px;color:var(--ai);line-height:1.35}
+  .kc .kk{font-size:10.5px;color:var(--matcha);line-height:1.35}
+  .kc .km{font-size:11px;color:var(--paper);font-weight:600;margin-top:3px;line-height:1.3}
+  .pager{display:flex;gap:8px;align-items:center;margin:12px 0}
+  .pbtn{flex:1;padding:10px;background:#12171F;color:var(--paper);border:1px solid var(--line);
+        border-radius:9px;cursor:pointer;font-size:13px}
+  .pbtn:disabled{color:#3B4351;cursor:default}
+  .pinfo{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:1px}
+
+  /* ---- vocab ---- */
+  .vi{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+      padding:11px 13px;margin-bottom:7px;cursor:pointer}
+  .vi.open{border-color:var(--ai)}
+  .vi-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .vi-w{font-family:var(--jp);font-size:19px;font-weight:600}
+  .vi-r{font-size:12.5px;color:var(--ai);margin-left:8px;font-family:var(--jp)}
+  .vi-m{font-size:15px;font-weight:600;margin:9px 0 2px}
+
+  /* ---- drills ---- */
+  .score{display:flex;gap:8px;margin-bottom:12px}
+  .sbox{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:9px;
+        padding:8px 10px;text-align:center}
+  .sbox .n{font-size:19px;font-weight:800;font-family:var(--mono)}
+  .sbox .l{font-family:var(--mono);font-size:8.5px;letter-spacing:1px;
+           text-transform:uppercase;color:var(--dim);margin-top:1px}
+  .qcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+         padding:20px 16px;margin-bottom:12px;text-align:center}
+  .qtag{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+        color:var(--dim);margin-bottom:12px}
+  .qtext{font-family:var(--jp);font-size:26px;line-height:1.6;font-weight:600}
+  .qtext.sm{font-size:20px}
+  .qsub{font-size:13px;color:var(--muted);margin-top:10px;font-family:var(--ui)}
+  .opt{width:100%;padding:13px 14px;margin-bottom:8px;background:var(--panel);
+       border:1px solid var(--line);border-radius:10px;color:var(--paper);
+       font-size:16px;text-align:left;cursor:pointer;transition:.12s;font-family:var(--jp)}
+  .opt:hover:not(:disabled){border-color:var(--dim)}
+  .opt:disabled{cursor:default}
+  .opt.good{border-color:var(--matcha);background:#86C79B1A;color:var(--matcha);font-weight:700}
+  .opt.bad{border-color:var(--shu);background:#E2574A1A;color:var(--shu)}
+  .opt.fade{opacity:.4}
+  .expl{background:#0F141B;border:1px solid var(--line);border-left:3px solid var(--ai);
+        border-radius:8px;padding:12px 13px;margin-bottom:12px;font-size:13.5px;
+        color:#C7CEDA;line-height:1.7}
+  .expl b{color:var(--paper)}
+  .expl .jpx{font-family:var(--jp);font-size:15px;color:var(--paper)}
+  .btn{width:100%;padding:14px;background:var(--shu);color:#0E1116;border:0;
+       border-radius:10px;font-size:15px;font-weight:800;cursor:pointer}
+  .btn2{width:100%;padding:12px;background:transparent;color:var(--muted);
+        border:1px solid var(--line);border-radius:10px;font-size:13px;cursor:pointer}
+  .foot{text-align:center;font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;
+        color:#3B4351;padding:26px 0 10px;text-transform:uppercase}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div class="head-row">
+    <div class="seal">習</div>
+    <div class="head-title">日本語キット</div>
+  </div>
+  <div class="head-sub">Tae Kim · Ch.3 Basic Grammar · 80 kanji</div>
+</div>
+
+<nav class="tabs">
+  <button class="tab on" data-tab="par"><span class="t-jp">助詞</span><span class="t-en">Particles</span></button>
+  <button class="tab" data-tab="tra"><span class="t-jp">自他</span><span class="t-en">Trans/Intr</span></button>
+  <button class="tab" data-tab="con"><span class="t-jp">活用</span><span class="t-en">Conjug.</span></button>
+  <button class="tab" data-tab="bun"><span class="t-jp">文</span><span class="t-en">Sentence</span></button>
+  <button class="tab" data-tab="kan"><span class="t-jp">漢字</span><span class="t-en">Kanji</span></button>
+  <button class="tab" data-tab="voc"><span class="t-jp">単語</span><span class="t-en">Vocab</span></button>
+  <button class="tab" data-tab="dri"><span class="t-jp">練習</span><span class="t-en">Drills</span></button>
+</nav>
+
+<div class="wrap">
+
+  <section id="t-par">
+    <div class="shead"><span class="seal">助</span><h2>Particles</h2><span class="rule"></span><span class="sub">tap to open</span></div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">
+      A particle attaches to the word <em>before</em> it and tells you what job that word is doing in the sentence.
+      Japanese word order is loose — the particles are what hold the meaning in place.
+    </p>
+    <div id="par-list"></div>
+    <div class="shead"><span class="seal">終</span><h2>Sentence-ending particles</h2><span class="rule"></span><span class="sub">3.12</span></div>
+    <div id="par-end"></div>
+    <div class="shead"><span class="seal">対</span><h2>Easy to confuse</h2><span class="rule"></span></div>
+    <div id="par-pairs"></div>
+  </section>
+
+  <section id="t-tra" class="hidden">
+    <div class="shead"><span class="seal">自</span><h2>Transitive &amp; intransitive</h2><span class="rule"></span><span class="sub">3.9</span></div>
+    <div id="tra-intro"></div>
+    <div class="shead"><span class="seal">対</span><h2>The pairs</h2><span class="rule"></span><span class="sub">tap to open</span></div>
+    <div id="tra-list"></div>
+  </section>
+
+  <section id="t-bun" class="hidden">
+    <div class="chip-row" id="bun-chips"></div>
+    <div id="bun-body"></div>
+  </section>
+
+  <section id="t-con" class="hidden">
+    <div class="chip-row" id="con-chips"></div>
+    <div id="con-body"></div>
+  </section>
+
+  <section id="t-kan" class="hidden">
+    <div class="shead"><span class="seal">字</span><h2>Kanji</h2><span class="rule"></span><span class="pinfo" id="k-info"></span></div>
+    <div class="kgrid" id="k-grid"></div>
+    <div class="pager">
+      <button class="pbtn" id="k-prev">← Back</button>
+      <button class="pbtn" id="k-next">Next →</button>
+    </div>
+    <div id="k-words"></div>
+  </section>
+
+  <section id="t-voc" class="hidden">
+    <div class="chip-row" id="v-chips"></div>
+    <div class="lbl" id="v-count"></div>
+    <div id="v-list"></div>
+  </section>
+
+  <section id="t-dri" class="hidden">
+    <div class="chip-row" id="d-chips"></div>
+    <div class="score">
+      <div class="sbox"><div class="n" id="d-right" style="color:var(--matcha)">0</div><div class="l">Right</div></div>
+      <div class="sbox"><div class="n" id="d-wrong" style="color:var(--shu)">0</div><div class="l">Wrong</div></div>
+      <div class="sbox"><div class="n" id="d-streak" style="color:var(--kincha)">0</div><div class="l">Streak</div></div>
+    </div>
+    <div id="d-stage"></div>
+  </section>
+
+  <div class="foot">一歩ずつ · one step at a time</div>
+</div>
+
+<script>
+const N5_KANJI = [
+  {kanji:"一",on:"いち",kun:"ひと(つ)",meaning:"one",words:["一つ (ひとつ) = one thing","一月 (いちがつ) = January"]},
+  {kanji:"二",on:"に",kun:"ふた(つ)",meaning:"two",words:["二つ (ふたつ) = two things","二月 (にがつ) = February"]},
+  {kanji:"三",on:"さん",kun:"み(っつ)",meaning:"three",words:["三つ (みっつ) = three things","三月 (さんがつ) = March"]},
+  {kanji:"四",on:"し / よん",kun:"よ(っつ)",meaning:"four",words:["四つ (よっつ) = four things","四月 (しがつ) = April"]},
+  {kanji:"五",on:"ご",kun:"いつ(つ)",meaning:"five",words:["五つ (いつつ) = five things","五月 (ごがつ) = May"]},
+  {kanji:"六",on:"ろく",kun:"む(っつ)",meaning:"six",words:["六つ (むっつ) = six things","六月 (ろくがつ) = June"]},
+  {kanji:"七",on:"しち / なな",kun:"なな(つ)",meaning:"seven",words:["七つ (ななつ) = seven things","七月 (しちがつ) = July"]},
+  {kanji:"八",on:"はち",kun:"や(っつ)",meaning:"eight",words:["八つ (やっつ) = eight things","八月 (はちがつ) = August"]},
+  {kanji:"九",on:"く / きゅう",kun:"ここの(つ)",meaning:"nine",words:["九つ (ここのつ) = nine things","九月 (くがつ) = September"]},
+  {kanji:"十",on:"じゅう",kun:"とお",meaning:"ten",words:["十 (じゅう) = ten","十月 (じゅうがつ) = October"]},
+  {kanji:"百",on:"ひゃく",kun:"—",meaning:"hundred",words:["百 (ひゃく) = 100","三百 (さんびゃく) = 300"]},
+  {kanji:"千",on:"せん",kun:"ち",meaning:"thousand",words:["千 (せん) = 1,000","三千 (さんぜん) = 3,000"]},
+  {kanji:"万",on:"まん / ばん",kun:"—",meaning:"ten-thousand",words:["一万 (いちまん) = 10,000","万年筆 (まんねんひつ) = fountain pen"]},
+  {kanji:"円",on:"えん",kun:"まる",meaning:"yen / circle",words:["百円 (ひゃくえん) = 100 yen","円 (えん) = yen"]},
+  {kanji:"年",on:"ねん",kun:"とし",meaning:"year",words:["今年 (ことし) = this year","去年 (きょねん) = last year"]},
+  {kanji:"月",on:"げつ / がつ",kun:"つき",meaning:"moon / month",words:["月曜日 (げつようび) = Monday","月 (つき) = moon"]},
+  {kanji:"日",on:"にち / じつ",kun:"ひ / か",meaning:"sun / day",words:["日曜日 (にちようび) = Sunday","今日 (きょう) = today"]},
+  {kanji:"時",on:"じ",kun:"とき",meaning:"time / hour",words:["三時 (さんじ) = 3 o'clock","時間 (じかん) = time / duration"]},
+  {kanji:"分",on:"ふん / ぶん",kun:"わ(かる)",meaning:"minute / part / understand",words:["三分 (さんぷん) = 3 min","自分 (じぶん) = oneself","分かる (わかる) = to understand"]},
+  {kanji:"半",on:"はん",kun:"なか(ば)",meaning:"half",words:["三時半 (さんじはん) = 3:30","半分 (はんぶん) = half"]},
+  {kanji:"火",on:"か",kun:"ひ",meaning:"fire",words:["火曜日 (かようび) = Tuesday","火 (ひ) = fire"]},
+  {kanji:"水",on:"すい",kun:"みず",meaning:"water",words:["水曜日 (すいようび) = Wednesday","水 (みず) = water"]},
+  {kanji:"木",on:"もく",kun:"き",meaning:"tree / wood",words:["木曜日 (もくようび) = Thursday","木 (き) = tree"]},
+  {kanji:"金",on:"きん",kun:"かね / かな",meaning:"gold / money",words:["金曜日 (きんようび) = Friday","お金 (おかね) = money"]},
+  {kanji:"土",on:"ど / と",kun:"つち",meaning:"earth / soil",words:["土曜日 (どようび) = Saturday","土 (つち) = soil"]},
+  {kanji:"人",on:"じん / にん",kun:"ひと",meaning:"person",words:["日本人 (にほんじん) = Japanese person","人 (ひと) = person"]},
+  {kanji:"子",on:"し / す",kun:"こ",meaning:"child",words:["子供 (こども) = child","女子 (じょし) = girl / female"]},
+  {kanji:"女",on:"じょ / にょ",kun:"おんな",meaning:"woman / female",words:["女 (おんな) = woman","女の子 (おんなのこ) = girl"]},
+  {kanji:"男",on:"だん / なん",kun:"おとこ",meaning:"man / male",words:["男 (おとこ) = man","男の子 (おとこのこ) = boy"]},
+  {kanji:"父",on:"ふ",kun:"ちち",meaning:"father",words:["父 (ちち) = my father","お父さん (おとうさん) = father (polite)"]},
+  {kanji:"母",on:"ぼ",kun:"はは",meaning:"mother",words:["母 (はは) = my mother","お母さん (おかあさん) = mother (polite)"]},
+  {kanji:"先",on:"せん",kun:"さき",meaning:"ahead / previous",words:["先生 (せんせい) = teacher","先週 (せんしゅう) = last week"]},
+  {kanji:"生",on:"せい / しょう",kun:"い(きる) / う(まれる)",meaning:"life / birth",words:["先生 (せんせい) = teacher","学生 (がくせい) = student"]},
+  {kanji:"学",on:"がく",kun:"まな(ぶ)",meaning:"study / learning",words:["学生 (がくせい) = student","学校 (がっこう) = school"]},
+  {kanji:"校",on:"こう",kun:"—",meaning:"school",words:["学校 (がっこう) = school","高校 (こうこう) = high school"]},
+  {kanji:"友",on:"ゆう",kun:"とも",meaning:"friend",words:["友達 (ともだち) = friend","友人 (ゆうじん) = friend (formal)"]},
+  {kanji:"本",on:"ほん",kun:"もと",meaning:"book / origin",words:["本 (ほん) = book","日本 (にほん) = Japan"]},
+  {kanji:"語",on:"ご",kun:"かた(る)",meaning:"language / word",words:["日本語 (にほんご) = Japanese","英語 (えいご) = English"]},
+  {kanji:"言",on:"げん / ごん",kun:"い(う) / こと",meaning:"say / word",words:["言う (いう) = to say","言葉 (ことば) = word / language"]},
+  {kanji:"読",on:"どく",kun:"よ(む)",meaning:"read",words:["読む (よむ) = to read","読書 (どくしょ) = reading (hobby)"]},
+  {kanji:"書",on:"しょ",kun:"か(く)",meaning:"write",words:["書く (かく) = to write","教科書 (きょうかしょ) = textbook"]},
+  {kanji:"聞",on:"ぶん / もん",kun:"き(く)",meaning:"listen / ask",words:["聞く (きく) = to listen / to ask","新聞 (しんぶん) = newspaper"]},
+  {kanji:"話",on:"わ",kun:"はな(す)",meaning:"speak / story",words:["話す (はなす) = to speak","電話 (でんわ) = telephone"]},
+  {kanji:"見",on:"けん",kun:"み(る)",meaning:"see / look",words:["見る (みる) = to see","見せる (みせる) = to show"]},
+  {kanji:"食",on:"しょく",kun:"た(べる)",meaning:"eat / food",words:["食べる (たべる) = to eat ✔ (not 食る!)","食事 (しょくじ) = meal"]},
+  {kanji:"飲",on:"いん",kun:"の(む)",meaning:"drink",words:["飲む (のむ) = to drink","飲み物 (のみもの) = beverage"]},
+  {kanji:"買",on:"ばい",kun:"か(う)",meaning:"buy",words:["買う (かう) = to buy","買い物 (かいもの) = shopping"]},
+  {kanji:"行",on:"こう / ぎょう",kun:"い(く) / ゆ(く)",meaning:"go",words:["行く (いく) = to go","旅行 (りょこう) = travel"]},
+  {kanji:"来",on:"らい",kun:"く(る)",meaning:"come",words:["来る (くる) = to come","来週 (らいしゅう) = next week"]},
+  {kanji:"帰",on:"き",kun:"かえ(る)",meaning:"return home",words:["帰る (かえる) = to go home","帰国 (きこく) = returning to one's country"]},
+  {kanji:"出",on:"しゅつ / すい",kun:"で(る) / だ(す)",meaning:"exit / put out",words:["出る (でる) = to exit","出す (だす) = to put out / submit"]},
+  {kanji:"入",on:"にゅう",kun:"い(る) / はい(る)",meaning:"enter",words:["入る (はいる) = to enter","入口 (いりぐち) = entrance"]},
+  {kanji:"上",on:"じょう",kun:"うえ / あ(がる)",meaning:"above / up",words:["上 (うえ) = above","上がる (あがる) = to go up"]},
+  {kanji:"下",on:"か / げ",kun:"した / さ(がる)",meaning:"below / down",words:["下 (した) = below","下がる (さがる) = to go down"]},
+  {kanji:"中",on:"ちゅう",kun:"なか",meaning:"inside / middle",words:["中 (なか) = inside","中国 (ちゅうごく) = China"]},
+  {kanji:"大",on:"だい / たい",kun:"おお(きい)",meaning:"big",words:["大きい (おおきい) = big","大学 (だいがく) = university"]},
+  {kanji:"小",on:"しょう",kun:"ちい(さい) / こ",meaning:"small",words:["小さい (ちいさい) = small","小学校 (しょうがっこう) = elementary school"]},
+  {kanji:"高",on:"こう",kun:"たか(い)",meaning:"high / expensive",words:["高い (たかい) = high / expensive","高校 (こうこう) = high school"]},
+  {kanji:"長",on:"ちょう",kun:"なが(い)",meaning:"long / chief",words:["長い (ながい) = long","校長 (こうちょう) = school principal"]},
+  {kanji:"古",on:"こ",kun:"ふる(い)",meaning:"old (things)",words:["古い (ふるい) = old (thing)","古本 (ふるほん) = used book"]},
+  {kanji:"新",on:"しん",kun:"あたら(しい) / あら",meaning:"new",words:["新しい (あたらしい) = new","新聞 (しんぶん) = newspaper"]},
+  {kanji:"白",on:"はく / びゃく",kun:"しろ / しら",meaning:"white",words:["白い (しろい) = white","白黒 (しろくろ) = black and white"]},
+  {kanji:"黒",on:"こく",kun:"くろ",meaning:"black",words:["黒い (くろい) = black","黒板 (こくばん) = blackboard"]},
+  {kanji:"赤",on:"せき",kun:"あか",meaning:"red",words:["赤い (あかい) = red","赤ちゃん (あかちゃん) = baby"]},
+  {kanji:"青",on:"せい",kun:"あお",meaning:"blue / green",words:["青い (あおい) = blue / pale","青空 (あおぞら) = blue sky"]},
+  {kanji:"山",on:"さん",kun:"やま",meaning:"mountain",words:["山 (やま) = mountain","富士山 (ふじさん) = Mt. Fuji"]},
+  {kanji:"川",on:"せん",kun:"かわ",meaning:"river",words:["川 (かわ) = river","小川 (おがわ) = stream"]},
+  {kanji:"花",on:"か",kun:"はな",meaning:"flower",words:["花 (はな) = flower","花見 (はなみ) = cherry blossom viewing"]},
+  {kanji:"空",on:"くう",kun:"そら / あ(く)",meaning:"sky / empty",words:["空 (そら) = sky","空港 (くうこう) = airport"]},
+  {kanji:"雨",on:"う",kun:"あめ / あま",meaning:"rain",words:["雨 (あめ) = rain","雨天 (うてん) = rainy weather"]},
+  {kanji:"国",on:"こく",kun:"くに",meaning:"country",words:["国 (くに) = country","外国 (がいこく) = foreign country"]},
+  {kanji:"東",on:"とう",kun:"ひがし",meaning:"east",words:["東京 (とうきょう) = Tokyo","東 (ひがし) = east"]},
+  {kanji:"西",on:"せい / さい",kun:"にし",meaning:"west",words:["西 (にし) = west","関西 (かんさい) = Kansai region"]},
+  {kanji:"南",on:"なん / な",kun:"みなみ",meaning:"south",words:["南 (みなみ) = south","南国 (なんごく) = tropical country"]},
+  {kanji:"北",on:"ほく",kun:"きた",meaning:"north",words:["北 (きた) = north","北海道 (ほっかいどう) = Hokkaido"]},
+  {kanji:"後",on:"ご / こう",kun:"あと / うし(ろ)",meaning:"after / behind",words:["後で (あとで) = later","午後 (ごご) = afternoon (PM)"]},
+  {kanji:"前",on:"ぜん / せん",kun:"まえ",meaning:"before / front",words:["前 (まえ) = in front","午前 (ごぜん) = morning (AM)"]},
+  {kanji:"右",on:"う / ゆう",kun:"みぎ",meaning:"right",words:["右 (みぎ) = right side","右手 (みぎて) = right hand"]},
+  {kanji:"左",on:"さ",kun:"ひだり",meaning:"left",words:["左 (ひだり) = left side","左手 (ひだりて) = left hand"]},
+  {kanji:"何",on:"か",kun:"なに / なん",meaning:"what",words:["何 (なに/なん) = what","何時 (なんじ) = what time"]},
+  {kanji:"今",on:"こん / きん",kun:"いま",meaning:"now",words:["今 (いま) = now","今日 (きょう) = today","今週 (こんしゅう) = this week"]},
+];
+
+/* ==================== PARTICLES (Tae Kim Ch.3 §2, §7, §10) ==================== */
+const PARTICLES = [
+  {
+    ch:"は", name:"wa — topic particle", fn:"marks what the sentence is about",
+    jlpt:"N5",
+    desc:"Written は but pronounced <b>wa</b>. It picks out the topic: “as for X…”. It does <b>not</b> mean “is” — the state-of-being (だ / です) does that job separately. Anything already understood from context is usually dropped, and は is often the only thing left pointing at it.",
+    ex:[
+      ["私(わたし)<b>は</b>学生(がくせい)だ。","As for me, [I] am a student."],
+      ["今日(きょう)<b>は</b>寒(さむ)くない。","As for today, it isn't cold."],
+      ["魚(さかな)<b>は</b>食(た)べない。","As for fish, [I] don't eat [it]."]
+    ],
+    note:"The topic is not always the subject. In 魚は食べない, 魚 is what's being <i>eaten</i>, not what's doing the eating.",
+    warn:"Don't stack は with も, が or を — they replace each other. ✗ 私はも学生だ → ✔ 私も学生だ"
+  },
+  {
+    ch:"も", name:"mo — inclusive topic", fn:"“also / too / either”",
+    jlpt:"N5",
+    desc:"Same job as は, but it adds the meaning “too”. It <b>replaces</b> は (and often が / を) rather than stacking on top of them.",
+    ex:[
+      ["私(わたし)<b>も</b>学生(がくせい)だ。","I'm a student too."],
+      ["ケーキ<b>も</b>食(た)べた。","I ate cake as well."],
+      ["肉(にく)<b>も</b>食(た)べない。","I don't eat meat either."]
+    ],
+    note:"In a negative sentence も comes out as “<b>not … either</b>”, not “also not”."
+  },
+  {
+    ch:"が", name:"ga — identifier particle", fn:"identifies which one",
+    jlpt:"N5",
+    desc:"が points at the piece of <b>new or unknown</b> information — it answers “which one?” / “who?”. は says “about X…”; が says “X is the one”.",
+    ex:[
+      ["誰(だれ)<b>が</b>来(き)た？","<i>Who</i> came? (identify the person)"],
+      ["私(わたし)<b>が</b>学生(がくせい)だ。","<i>I'm</i> the one who's a student."],
+      ["部屋(へや)に猫(ねこ)<b>が</b>いる。","There's a cat in the room."]
+    ],
+    note:"Question words as subject (誰, 何, どれ…) must take <b>が</b>, never は. You can't make a topic out of something you don't know yet.",
+    warn:"好(す)き, 嫌(きら)い, 分(わ)かる, ある / いる and potential forms take が, not を. ✔ 日本語(にほんご)が分かる"
+  },
+  {
+    ch:"を", name:"(w)o — direct object", fn:"marks the target of the action",
+    jlpt:"N5",
+    desc:"Pronounced <b>o</b>. Marks the thing the verb is done to. With verbs of motion it marks the space that is passed through or left behind.",
+    ex:[
+      ["ご飯(はん)<b>を</b>食(た)べる。","I eat a meal."],
+      ["公園(こうえん)<b>を</b>歩(ある)く。","I walk through the park."],
+      ["家(いえ)<b>を</b>出(で)る。","I leave the house."]
+    ],
+    note:"を is only ever used as a particle — it never appears inside a word.",
+    warn:"Intransitive verbs can't take を. ✗ ドアが開(あ)くをする → ドアが開く “the door opens”, ドア<b>を</b>開(あ)ける “I open the door”."
+  },
+  {
+    ch:"に", name:"ni — target particle", fn:"a point: place, time, recipient",
+    jlpt:"N5",
+    desc:"に aims at a <b>point</b>. That point can be a destination, a point in time, the receiver of something, or the place where something exists.",
+    ex:[
+      ["日本(にほん)<b>に</b>行(い)く。","I go to Japan. (destination)"],
+      ["七時(しちじ)<b>に</b>起(お)きる。","I get up at seven. (time)"],
+      ["友達(ともだち)<b>に</b>本(ほん)をあげる。","I give a book to a friend. (recipient)"],
+      ["部屋(へや)<b>に</b>猫(ねこ)がいる。","There's a cat in the room. (existence)"]
+    ],
+    note:"Only <b>specific</b> times take に: 七時に ✔ / 三月(さんがつ)に ✔ — but 今日(きょう), 明日(あした), 毎日(まいにち) take no particle."
+  },
+  {
+    ch:"へ", name:"e — directional particle", fn:"“toward”",
+    jlpt:"N5",
+    desc:"Written へ but pronounced <b>e</b>. Points at a <b>direction</b> rather than an end point — vaguer and slightly more formal than に.",
+    ex:[
+      ["日本(にほん)<b>へ</b>行(い)く。","I'm heading for Japan."],
+      ["どちら<b>へ</b>？","Where are you off to?"]
+    ],
+    note:"With motion verbs, に and へ are usually both fine. に = arrival point, へ = the way you're facing.",
+    warn:"へ can't replace に for time or recipients. ✗ 七時へ起きる ✗ 友達へあげる"
+  },
+  {
+    ch:"で", name:"de — context particle", fn:"where / by what means",
+    jlpt:"N5",
+    desc:"で gives the <b>context</b> an action happens in: the place of the action, the tool used, or the material.",
+    ex:[
+      ["学校(がっこう)<b>で</b>勉強(べんきょう)する。","I study at school. (place of action)"],
+      ["バス<b>で</b>行(い)く。","I go by bus. (means)"],
+      ["日本語(にほんご)<b>で</b>話(はな)す。","I speak in Japanese. (medium)"]
+    ],
+    note:"に vs で: 図書館(としょかん)<b>に</b>本(ほん)がある “a book <i>exists</i> at the library” — 図書館<b>で</b>本を読(よ)む “I <i>read</i> at the library.” Existence → に, action → で."
+  },
+  {
+    ch:"と", name:"to — and / with", fn:"complete list, or a companion",
+    jlpt:"N5",
+    desc:"Between nouns, と means “and” and implies the list is <b>complete</b>. Attached to a person, it means “with”.",
+    ex:[
+      ["本(ほん)<b>と</b>ペンを買(か)った。","I bought a book and a pen. (just those two)"],
+      ["友達(ともだち)<b>と</b>映画(えいが)を見(み)る。","I watch a movie with a friend."]
+    ],
+    warn:"と only joins <b>nouns</b>. It can't join verbs or い-adjectives. ✗ 高(たか)いと新(あたら)しい"
+  },
+  {
+    ch:"や", name:"ya — and (partial list)", fn:"“things like X and Y”",
+    jlpt:"N5",
+    desc:"Same slot as と, but the list is deliberately <b>incomplete</b> — examples rather than the whole set.",
+    ex:[
+      ["本(ほん)<b>や</b>ペンを買(か)った。","I bought books, pens and so on."],
+      ["猫(ねこ)<b>や</b>犬(いぬ)が好(す)きだ。","I like cats, dogs, that kind of thing."]
+    ],
+    note:"や sits <i>between</i> items only — it never attaches to the last one."
+  },
+  {
+    ch:"とか", name:"toka — and (casual)", fn:"spoken version of や",
+    jlpt:"N5",
+    desc:"The conversational cousin of や. Softer, vaguer, and very common in speech — you'll meet it constantly in よつばと！",
+    ex:[
+      ["本(ほん)<b>とか</b>ペン<b>とか</b>を買(か)った。","I bought books and pens and stuff."],
+      ["寿司(すし)<b>とか</b>食(た)べたい。","I want to eat sushi or something."]
+    ],
+    note:"Unlike や, とか <b>can</b> attach to the final item too."
+  },
+  {
+    ch:"の", name:"no — possessive / linker", fn:"joins noun to noun",
+    jlpt:"N5",
+    desc:"の glues one noun to another: the first one describes or owns the second. It can also stand in <b>for</b> a noun you've already established.",
+    ex:[
+      ["私(わたし)<b>の</b>本(ほん)","my book (ownership)"],
+      ["日本語(にほんご)<b>の</b>先生(せんせい)","a Japanese[-language] teacher (describing)"],
+      ["赤(あか)い<b>の</b>が好(す)きだ。","I like the red one. (の = the thing)"],
+      ["これは私(わたし)<b>の</b>じゃない。","This isn't mine."]
+    ],
+    note:"Chains are fine and read right-to-left: 友達(ともだち)の犬(いぬ)の名前(なまえ) = “my friend's dog's name”.",
+    warn:"After a な-adjective or noun you need <b>な</b> before の in the explanatory sense: 静(しず)か<b>な</b>の？ ✔ / 静かの？ ✗"
+  }
+];
+
+const PAIRS = [
+  { t:"は vs が",
+    a:["私<b>は</b>学生だ。","<i>Speaking of me</i> — student. Neutral background info."],
+    b:["私<b>が</b>学生だ。","<i>I</i> am the student. Answers “who is?”"],
+    k:"Ask yourself: am I setting the scene (は) or singling one out (が)?" },
+  { t:"に vs で",
+    a:["公園(こうえん)<b>に</b>いる。","I'm <i>at</i> the park — existence, a point."],
+    b:["公園(こうえん)<b>で</b>遊(あそ)ぶ。","I play <i>at</i> the park — an action happens there."],
+    k:"ある / いる → に. Any real verb of doing → で." },
+  { t:"に vs へ",
+    a:["日本<b>に</b>行(い)く。","Going to Japan — the arrival point."],
+    b:["日本<b>へ</b>行(い)く。","Heading toward Japan — the direction."],
+    k:"Interchangeable for motion. For time and recipients, only に works." },
+  { t:"を vs が",
+    a:["日本語(にほんご)<b>を</b>話(はな)す。","話す is a normal action verb → を."],
+    b:["日本語(にほんご)<b>が</b>分(わ)かる。","分かる is a state, not an action → が."],
+    k:"分かる, 好き, 嫌い, ある / いる and potentials all take が." },
+  { t:"と vs や vs とか",
+    a:["本<b>と</b>ペン","exactly those two"],
+    b:["本<b>や</b>ペン / 本<b>とか</b>ペン<b>とか</b>","those and others like them — とか is the casual one"],
+    k:"と closes the list; や and とか leave it open." }
+];
+
+/* ==================== CONJUGATION (Ch.3 §1, §3, §4, §5, §6) ==================== */
+const CONJ = [
+{
+  id:"be", tab:"State-of-being",
+  title:"Nouns & な-adjectives — だ", sub:"Tae Kim 3.1",
+  intro:"だ is the <b>declarative</b>: it states that something is the case. Nouns and な-adjectives share exactly this pattern.",
+  rows:[
+    ["Plain","学生だ","がくせい だ","is a student"],
+    ["Negative","学生じゃない","がくせい じゃない","is not a student"],
+    ["Past","学生だった","がくせい だった","was a student"],
+    ["Past neg.","学生じゃなかった","がくせい じゃなかった","was not a student"]
+  ],
+  rows2:[
+    ["Polite","学生です","がくせい です","is a student"],
+    ["Polite neg.","学生じゃありません","がくせい じゃありません","is not a student"],
+    ["Polite past","学生でした","がくせい でした","was a student"],
+    ["Polite p.neg.","学生じゃありませんでした","がくせい じゃありませんでした","was not a student"]
+  ],
+  ex:[
+    ["静(しず)か<b>だった</b>。","It was quiet. (な-adjective, same pattern)"],
+    ["これは水(みず)<b>じゃない</b>。","This isn't water."]
+  ],
+  notes:[
+    "じゃ is a contraction of <b>では</b>. Written Japanese prefers ではない / ではありません.",
+    "In a casual question, だ is <b>dropped</b>: 学生？ ✔ — 学生だ？ sounds off."
+  ],
+  warn:"です is not だ + politeness in every sense — but for nouns and な-adjectives you can treat it as the polite counterpart."
+},
+{
+  id:"iadj", tab:"い-adjectives",
+  title:"い-adjectives", sub:"Tae Kim 3.3",
+  intro:"Drop the final い and attach the ending. い-adjectives conjugate <b>by themselves</b> — they never take だ.",
+  rows:[
+    ["Plain","高い","たかい","is expensive"],
+    ["Negative","高くない","たかくない","is not expensive"],
+    ["Past","高かった","たかかった","was expensive"],
+    ["Past neg.","高くなかった","たかくなかった","was not expensive"]
+  ],
+  ex:[
+    ["この本(ほん)は高(たか)<b>くなかった</b>。","This book wasn't expensive."],
+    ["高(たか)<b>い</b>本(ほん)を買(か)った。","I bought an expensive book. (attaches directly — no な)"]
+  ],
+  notes:[
+    "Attach straight onto a noun: 高い本 ✔. Only な-adjectives need な.",
+    "いい is irregular — it conjugates as よい: <b>よくない / よかった / よくなかった</b>. Same for 格好(かっこう)いい → 格好よかった."
+  ],
+  warn:"Never put だ after an い-adjective. ✗ 高いだ → ✔ 高い. (高いです is fine — that's politeness, not だ.)"
+},
+{
+  id:"naadj", tab:"な-adjectives",
+  title:"な-adjectives", sub:"Tae Kim 3.3",
+  intro:"These behave like nouns. They conjugate with the だ pattern, and they need <b>な</b> to attach to a noun.",
+  rows:[
+    ["Plain","静かだ","しずか だ","is quiet"],
+    ["Negative","静かじゃない","しずか じゃない","is not quiet"],
+    ["Past","静かだった","しずか だった","was quiet"],
+    ["Past neg.","静かじゃなかった","しずか じゃなかった","was not quiet"]
+  ],
+  ex:[
+    ["静(しず)か<b>な</b>部屋(へや)","a quiet room"],
+    ["きれい<b>じゃなかった</b>。","It wasn't clean."]
+  ],
+  notes:[
+    "Common な-adjectives: 静(しず)か, 元気(げんき), 好(す)き, 嫌(きら)い, 便利(べんり), 有名(ゆうめい).",
+    "きれい and 嫌(きら)い <b>end in い but are な-adjectives</b> — the い is part of the kanji reading, not an adjective ending."
+  ],
+  warn:"✗ 静か部屋 → ✔ 静かな部屋. The な only appears when modifying a noun, not at the end of a sentence."
+},
+{
+  id:"ru", tab:"ru-verbs",
+  title:"ru-verbs (一段)", sub:"Tae Kim 3.4–3.6",
+  intro:"The easy group. Drop <b>る</b> to get the stem, then attach. No sound changes, ever.",
+  rows:[
+    ["Plain","食べる","たべる","eat"],
+    ["Negative","食べない","たべない","don't eat"],
+    ["Past","食べた","たべた","ate"],
+    ["Past neg.","食べなかった","たべなかった","didn't eat"]
+  ],
+  rows2:[
+    ["Polite","食べます","たべます","eat"],
+    ["Polite neg.","食べません","たべません","don't eat"],
+    ["Polite past","食べました","たべました","ate"],
+    ["Polite p.neg.","食べませんでした","たべませんでした","didn't eat"]
+  ],
+  ex:[
+    ["見(み)る → 見<b>ない</b> / 見<b>た</b> / 見<b>なかった</b>","see / don't see / saw / didn't see"],
+    ["起(お)きる → 起き<b>なかった</b>","didn't get up"]
+  ],
+  notes:[
+    "How to spot one: the verb ends in る <b>and</b> the vowel before る is /i/ or /e/ — 見<u>る</u> (mi-ru), 食べ<u>る</u> (tabe-ru).",
+    "Past negative is always just the negative with ない → <b>なかった</b>. That rule holds for every verb in the language."
+  ],
+  warn:"Traps: 帰(かえ)る, 入(はい)る, 走(はし)る, 切(き)る, 知(し)る, 要(い)る, 喋(しゃべ)る all look like ru-verbs but are <b>u-verbs</b>. 帰る → 帰ら<b>ない</b>, not 帰ない."
+},
+{
+  id:"u", tab:"u-verbs",
+  title:"u-verbs (五段)", sub:"Tae Kim 3.4–3.6",
+  intro:"The last kana shifts vowel. For the negative it moves to the /a/ row; for the past it follows a sound-change table.",
+  rows:[
+    ["Plain","飲む","のむ","drink"],
+    ["Negative","飲まない","のまない","don't drink"],
+    ["Past","飲んだ","のんだ","drank"],
+    ["Past neg.","飲まなかった","のまなかった","didn't drink"]
+  ],
+  rows2:[
+    ["Polite","飲みます","のみます","drink"],
+    ["Polite neg.","飲みません","のみません","don't drink"],
+    ["Polite past","飲みました","のみました","drank"],
+    ["Polite p.neg.","飲みませんでした","のみませんでした","didn't drink"]
+  ],
+  past:[
+    ["す","した","話(はな)す → 話した"],
+    ["く","いた","書(か)く → 書いた"],
+    ["ぐ","いだ","泳(およ)ぐ → 泳いだ"],
+    ["む・ぶ・ぬ","んだ","飲(の)む → 飲んだ ／ 遊(あそ)ぶ → 遊んだ ／ 死(し)ぬ → 死んだ"],
+    ["る・つ・う","った","帰(かえ)る → 帰った ／ 待(ま)つ → 待った ／ 買(か)う → 買った"]
+  ],
+  ex:[
+    ["書(か)く → 書<b>かない</b> / 書<b>いた</b>","write → don't write / wrote"],
+    ["買(か)う → 買<b>わない</b>","buy → don't buy"]
+  ],
+  notes:[
+    "Negative: change the final /u/ to /a/ and add ない. 飲<u>む</u> → 飲<u>ま</u>ない.",
+    "Polite: change the final /u/ to /i/ and add ます. 飲<u>む</u> → 飲<u>み</u>ます."
+  ],
+  warn:"Verbs ending in <b>う</b> take <b>わ</b>, not あ: 買う → 買<b>わ</b>ない ✔ / 買あない ✗. And 行(い)く breaks the く rule: 行<b>った</b>, not 行いた."
+},
+{
+  id:"irr", tab:"Exceptions",
+  title:"Irregular verbs", sub:"Tae Kim 3.4–3.6",
+  intro:"Japanese has almost no irregular verbs. These are all of them worth knowing right now.",
+  rows:[
+    ["する","しない ／ した ／ しなかった","する","do"],
+    ["来る","来ない (こない) ／ 来た (きた) ／ 来なかった (こなかった)","くる","come"],
+    ["ある","<b>ない</b> ／ あった ／ なかった","ある","exist (things)"],
+    ["行く","行かない ／ <b>行った</b> ／ 行かなかった","いく","go"]
+  ],
+  ex:[
+    ["勉強(べんきょう)<b>する</b> → 勉強<b>しなかった</b>","study → didn't study"],
+    ["お金(かね)が<b>ない</b>。","I have no money. (not あらない)"]
+  ],
+  notes:[
+    "来る changes its <b>reading</b> as it conjugates — 来る(くる) / 来ない(こない) / 来た(きた). The kanji stays put, so watch the context.",
+    "Any noun + する makes a verb: 勉強する, 電話(でんわ)する, 旅行(りょこう)する."
+  ],
+  warn:"ある is only irregular in the negative. いる (living things) is a perfectly regular ru-verb: いない / いた / いなかった."
+}
+];
+/* ==================== VOCAB ==================== */
+const VOCAB = [
+ {w:"食べる",r:"たべる",m:"to eat",t:"ru-verb",e:"ご飯(はん)を食べる。= I eat a meal.",n:"Stem is 食べ — 食べない, 食べた. Not 食る."},
+ {w:"見る",r:"みる",m:"to see / to watch",t:"ru-verb",e:"テレビを見る。= I watch TV."},
+ {w:"起きる",r:"おきる",m:"to get up / to happen",t:"ru-verb",e:"七時(しちじ)に起きる。= I get up at seven."},
+ {w:"いる",r:"いる",m:"to exist (animate)",t:"ru-verb",e:"猫(ねこ)がいる。= There's a cat.",n:"Living things. Regular: いない / いた."},
+ {w:"寝る",r:"ねる",m:"to sleep",t:"ru-verb",e:"早(はや)く寝る。= I sleep early."},
+ {w:"飲む",r:"のむ",m:"to drink",t:"u-verb",e:"水(みず)を飲む。= I drink water.",n:"む → 飲んだ (past), 飲まない (neg)."},
+ {w:"読む",r:"よむ",m:"to read",t:"u-verb",e:"本(ほん)を読む。= I read a book."},
+ {w:"書く",r:"かく",m:"to write",t:"u-verb",e:"手紙(てがみ)を書く。= I write a letter.",n:"く → 書いた."},
+ {w:"聞く",r:"きく",m:"to listen / to ask",t:"u-verb",e:"音楽(おんがく)を聞く。= I listen to music."},
+ {w:"話す",r:"はなす",m:"to speak",t:"u-verb",e:"日本語(にほんご)を話す。= I speak Japanese.",n:"す → 話した."},
+ {w:"買う",r:"かう",m:"to buy",t:"u-verb",e:"本(ほん)を買う。= I buy a book.",n:"う-verb → 買わない, not 買あない."},
+ {w:"帰る",r:"かえる",m:"to go home",t:"u-verb",e:"家(いえ)に帰る。= I go home.",n:"Looks like a ru-verb, is a u-verb: 帰らない / 帰った."},
+ {w:"分かる",r:"わかる",m:"to understand",t:"u-verb",e:"日本語(にほんご)が分かる。= I understand Japanese.",n:"Takes が, never を."},
+ {w:"ある",r:"ある",m:"to exist (inanimate)",t:"u-verb (irregular neg.)",e:"本(ほん)がある。= There's a book.",n:"Negative is ない, not あらない."},
+ {w:"待つ",r:"まつ",m:"to wait",t:"u-verb",e:"友達(ともだち)を待つ。= I wait for a friend.",n:"つ → 待った."},
+ {w:"泳ぐ",r:"およぐ",m:"to swim",t:"u-verb",e:"海(うみ)で泳ぐ。= I swim in the sea.",n:"ぐ → 泳いだ."},
+ {w:"遊ぶ",r:"あそぶ",m:"to play / hang out",t:"u-verb",e:"公園(こうえん)で遊ぶ。= I play at the park.",n:"ぶ → 遊んだ."},
+ {w:"行く",r:"いく",m:"to go",t:"irregular",e:"学校(がっこう)に行く。= I go to school.",n:"Past is 行った, breaking the く → いた rule."},
+ {w:"来る",r:"くる",m:"to come",t:"irregular",e:"友達(ともだち)が来る。= A friend is coming.",n:"Reading shifts: 来る(くる) / 来ない(こない) / 来た(きた)."},
+ {w:"する",r:"する",m:"to do",t:"irregular",e:"勉強(べんきょう)する。= I study.",n:"Attaches to nouns to make verbs."},
+ {w:"大きい",r:"おおきい",m:"big",t:"い-adjective",e:"大きい犬(いぬ)。= A big dog."},
+ {w:"小さい",r:"ちいさい",m:"small",t:"い-adjective",e:"小さい猫(ねこ)。= A small cat."},
+ {w:"高い",r:"たかい",m:"tall / expensive",t:"い-adjective",e:"高くなかった。= It wasn't expensive."},
+ {w:"安い",r:"やすい",m:"cheap",t:"い-adjective",e:"安い本(ほん)。= A cheap book."},
+ {w:"新しい",r:"あたらしい",m:"new",t:"い-adjective",e:"新しい車(くるま)。= A new car."},
+ {w:"古い",r:"ふるい",m:"old (things)",t:"い-adjective",e:"古い本(ほん)。= An old book.",n:"Objects only — for people use 年上(としうえ)."},
+ {w:"寒い",r:"さむい",m:"cold (weather)",t:"い-adjective",e:"今日(きょう)は寒くない。= It isn't cold today."},
+ {w:"いい / よい",r:"いい / よい",m:"good",t:"い-adjective",e:"よかった。= That was good / what a relief.",n:"Conjugates as よい: よくない, よかった, よくなかった."},
+ {w:"好き",r:"すき",m:"liked / favourite",t:"な-adjective",e:"音楽(おんがく)が好きだ。= I like music.",n:"Takes が. Literally “is likeable”, so it's an adjective, not a verb."},
+ {w:"嫌い",r:"きらい",m:"disliked",t:"な-adjective",e:"野菜(やさい)が嫌いだ。= I dislike vegetables.",n:"Ends in い but is a な-adjective."},
+ {w:"きれい",r:"きれい",m:"pretty / clean",t:"な-adjective",e:"きれいな花(はな)。= A beautiful flower.",n:"Also ends in い, also な-type. きれいじゃない."},
+ {w:"静か",r:"しずか",m:"quiet",t:"な-adjective",e:"静かな部屋(へや)。= A quiet room."},
+ {w:"元気",r:"げんき",m:"well / energetic",t:"な-adjective",e:"元気だった？ = Were you well?"},
+ {w:"便利",r:"べんり",m:"convenient",t:"な-adjective",e:"便利な店(みせ)。= A convenient shop."},
+ {w:"今日",r:"きょう",m:"today",t:"Noun",e:"今日は何曜日(なんようび)？ = What day is today?",n:"Takes no に."},
+ {w:"明日",r:"あした",m:"tomorrow",t:"Noun",e:"明日また来(く)る。= I'll come again tomorrow."},
+ {w:"昨日",r:"きのう",m:"yesterday",t:"Noun",e:"昨日は休(やす)みだった。= Yesterday was a day off."},
+ {w:"友達",r:"ともだち",m:"friend",t:"Noun",e:"友達と映画(えいが)を見た。= I watched a movie with a friend."},
+ {w:"先生",r:"せんせい",m:"teacher",t:"Noun",e:"先生は元気(げんき)だ。= The teacher is well."},
+ {w:"学生",r:"がくせい",m:"student",t:"Noun",e:"私(わたし)は学生じゃない。= I'm not a student."},
+ {w:"ご飯",r:"ごはん",m:"cooked rice / meal",t:"Noun",e:"ご飯を食べた。= I ate a meal."},
+ {w:"部屋",r:"へや",m:"room",t:"Noun",e:"部屋に猫(ねこ)がいる。= There's a cat in the room."},
+ {w:"何",r:"なに / なん",m:"what",t:"Question word",e:"これは何？ = What is this?",n:"なん before counters: 何時(なんじ), 何人(なんにん)."},
+ {w:"誰",r:"だれ",m:"who",t:"Question word",e:"誰が来た？ = Who came?",n:"As a subject it takes が, never は."},
+ {w:"どこ",r:"どこ",m:"where",t:"Question word",e:"どこに行く？ = Where are you going?"}
+];
+
+/* ==================== DRILLS ==================== */
+/* q = prompt, sub = English gloss/instruction, o = options, a = index of answer,
+   x = explanation, c = category, sm = smaller font */
+const QBANK = [
+/* ---------- particles ---------- */
+{c:"par",q:"私＿学生だ。",sub:"I am a student.",o:["は","が","を","で"],a:0,
+ x:"<b>は</b> sets the topic — “as for me”. が would be an answer to “<i>who</i> is the student?”, which nobody asked."},
+{c:"par",q:"誰＿来た？",sub:"Who came?",o:["は","が","も","の"],a:1,
+ x:"Question words as subject always take <b>が</b>. You can't make a topic out of something you don't know yet — ✗ 誰は来た？"},
+{c:"par",q:"学校＿勉強する。",sub:"I study at school.",o:["に","で","へ","を"],a:1,
+ x:"勉強する is an action, so the place it happens takes <b>で</b>. に would only work for existence (学校<b>に</b>いる)."},
+{c:"par",q:"部屋に猫＿いる。",sub:"There's a cat in the room.",o:["を","は","が","の"],a:2,
+ x:"With ある / いる the thing that exists is marked by <b>が</b>, and に marks where. ✗ 猫をいる — いる takes no object."},
+{c:"par",q:"七時＿起きる。",sub:"I get up at seven.",o:["で","へ","に","と"],a:2,
+ x:"<b>に</b> marks a specific point in time. へ is direction only — ✗ 七時へ起きる."},
+{c:"par",q:"家＿出る。",sub:"I leave the house.",o:["を","に","で","が"],a:0,
+ x:"With verbs of motion, <b>を</b> marks the space you leave or pass through. Compare 公園を歩く “walk through the park”."},
+{c:"par",q:"友達＿本をあげる。",sub:"I give a book to a friend.",o:["が","を","に","や"],a:2,
+ x:"<b>に</b> points at the recipient — the target of the giving. へ can't do this."},
+{c:"par",q:"日本語＿分かる。",sub:"I understand Japanese.",o:["を","が","に","で"],a:1,
+ x:"分(わ)かる is a state, not an action — the thing understood takes <b>が</b>. Same family: 好き, 嫌い, ある, いる."},
+{c:"par",q:"バス＿行く。",sub:"I go by bus.",o:["に","で","を","と"],a:1,
+ x:"<b>で</b> marks the means or tool. に after バス would mean “onto the bus”."},
+{c:"par",q:"本＿ペンを買った。",sub:"I bought a book and a pen — exactly those two.",o:["や","とか","と","も"],a:2,
+ x:"<b>と</b> gives a complete list. や and とか would imply “and other stuff too”."},
+{c:"par",q:"本＿ペンを買った。",sub:"I bought books, pens and things like that.",o:["と","や","に","の"],a:1,
+ x:"<b>や</b> lists examples without closing the list. The casual spoken version is とか."},
+{c:"par",q:"私＿学生だ。",sub:"I'm a student too.",o:["は","が","も","と"],a:2,
+ x:"<b>も</b> replaces は and adds “too”. It never stacks — ✗ 私はも学生だ."},
+{c:"par",q:"肉＿食べない。",sub:"I don't eat meat either.",o:["も","は","を","が"],a:0,
+ x:"In a negative sentence <b>も</b> comes out as “not … either”, not “also not”."},
+{c:"par",q:"日本語＿先生。",sub:"a Japanese-language teacher",o:["の","と","が","な"],a:0,
+ x:"<b>の</b> links noun to noun: the first describes the second. Read it right to left."},
+{c:"par",q:"赤いの＿好きだ。",sub:"I like the red one.",o:["を","が","に","で"],a:1,
+ x:"好き is a な-adjective, so what you like takes <b>が</b>. Here の stands in for the noun — “the red <i>one</i>”."},
+{c:"par",q:"図書館＿本がある。",sub:"There's a book at the library.",o:["で","に","を","へ"],a:1,
+ x:"Existence → <b>に</b>. Swap in an action and it flips: 図書館<b>で</b>本を読む."},
+{c:"par",q:"友達＿映画を見た。",sub:"I watched a movie with a friend.",o:["に","と","や","で"],a:1,
+ x:"<b>と</b> attached to a person means “with”. に would make the friend a recipient instead."},
+{c:"par",q:"公園＿歩く。",sub:"I walk through the park.",o:["を","で","に","へ"],a:0,
+ x:"<b>を</b> marks the space traversed with motion verbs. 公園<b>で</b>歩く isn't wrong, but it means “I do my walking at the park”."},
+{c:"par",q:"これは私＿じゃない。",sub:"This isn't mine.",o:["な","の","が","に"],a:1,
+ x:"<b>の</b> can stand alone for “mine” — the noun is understood. 私のじゃない = “isn't my [one]”."},
+{c:"par",q:"日本語＿話す。",sub:"I speak in Japanese (as the medium).",o:["を","が","で","に"],a:2,
+ x:"<b>で</b> marks the medium here. 日本語<b>を</b>話す would mean “I speak Japanese” as the object — both exist, different meanings."},
+
+/* ---------- conjugation ---------- */
+{c:"con",q:"食べる",sub:"→ plain past negative",o:["食べない","食べなかった","食べません","食べたない"],a:1,
+ x:"ru-verb: drop る → 食べ, add なかった. The rule is universal — take the ない form and turn ない into <b>なかった</b>."},
+{c:"con",q:"飲む",sub:"→ plain negative",o:["飲みない","飲まない","飲めない","飲んない"],a:1,
+ x:"u-verb: shift the last kana to the /a/ row and add ない. む → ま → 飲<b>ま</b>ない. 飲みない borrows the polite stem by mistake."},
+{c:"con",q:"買う",sub:"→ plain negative",o:["買あない","買わない","買らない","買いない"],a:1,
+ x:"Verbs ending in <b>う</b> take <b>わ</b>, not あ — a leftover from older Japanese. 買わない, 言(い)わない, 会(あ)わない."},
+{c:"con",q:"書く",sub:"→ plain past",o:["書きた","書いた","書った","書んだ"],a:1,
+ x:"く → <b>いた</b>. Compare ぐ → いだ (泳いだ). The only く-verb that breaks this is 行く → 行った."},
+{c:"con",q:"泳ぐ",sub:"→ plain past",o:["泳いた","泳いだ","泳んだ","泳った"],a:1,
+ x:"ぐ → <b>いだ</b>. The voicing carries over from the ぐ: 泳いだ, 急(いそ)いだ."},
+{c:"con",q:"遊ぶ",sub:"→ plain past",o:["遊いだ","遊った","遊んだ","遊した"],a:2,
+ x:"む・ぶ・ぬ all become <b>んだ</b>: 飲んだ, 遊んだ, 死(し)んだ. Three endings, one rule."},
+{c:"con",q:"待つ",sub:"→ plain past",o:["待った","待いた","待んだ","待ちた"],a:0,
+ x:"る・つ・う all become <b>った</b>: 帰った, 待った, 買った."},
+{c:"con",q:"話す",sub:"→ plain past",o:["話いた","話した","話った","話んだ"],a:1,
+ x:"す → <b>した</b>. This one's easy to remember because it matches the polite stem: 話します → 話した."},
+{c:"con",q:"行く",sub:"→ plain past",o:["行いた","行った","行きた","行んだ"],a:1,
+ x:"The single exception to the く rule. Every other く-verb gives いた, but 行く gives <b>行った</b>."},
+{c:"con",q:"する",sub:"→ plain past negative",o:["すなかった","しなかった","さなかった","しませんでした"],a:1,
+ x:"する → しない → <b>しなかった</b>. Irregular, so it's worth memorising outright."},
+{c:"con",q:"来る",sub:"→ plain negative",o:["来ない (こない)","来ない (きない)","来らない (こらない)","来ません"],a:0,
+ x:"The kanji stays 来 but the reading moves: 来る(くる) → 来<b>ない(こない)</b> → 来た(きた). Context tells you which."},
+{c:"con",q:"ある",sub:"→ plain negative",o:["あらない","ありない","ない","あるない"],a:2,
+ x:"ある is irregular in exactly one place: the negative is simply <b>ない</b>. お金(かね)がない = I have no money."},
+{c:"con",q:"帰る",sub:"→ plain negative",o:["帰ない","帰らない","帰りない","帰れない"],a:1,
+ x:"帰る <i>looks</i> like a ru-verb (える before る) but is a <b>u-verb</b> exception → 帰らない. Same trap: 入る, 走る, 切る, 知る, 要る."},
+{c:"con",q:"高い",sub:"→ plain past negative",o:["高いじゃなかった","高くなかった","高かったない","高くないだった"],a:1,
+ x:"Drop い → 高, then くなかった. い-adjectives conjugate on their own and never touch だ or じゃない."},
+{c:"con",q:"高い",sub:"→ plain past",o:["高いだった","高かった","高くた","高だった"],a:1,
+ x:"い → <b>かった</b>. 高かった. The だ pattern (だった) belongs to nouns and な-adjectives only."},
+{c:"con",q:"いい",sub:"→ plain past",o:["いかった","よかった","いいだった","いくなかった"],a:1,
+ x:"いい switches to its older form <b>よい</b> the moment it conjugates: よくない, よかった, よくなかった."},
+{c:"con",q:"静か",sub:"→ plain negative",o:["静かくない","静かじゃない","静かない","静かなじゃない"],a:1,
+ x:"な-adjectives use the だ pattern: 静かだ → 静か<b>じゃない</b>. くない belongs to い-adjectives."},
+{c:"con",q:"きれい",sub:"→ plain past negative",o:["きれくなかった","きれいじゃなかった","きれいくなかった","きれかった"],a:1,
+ x:"きれい ends in い but is a <b>な-adjective</b> — the い is part of the word (綺麗). So it takes じゃなかった."},
+{c:"con",q:"学生",sub:"→ plain past negative",o:["学生くなかった","学生じゃなかった","学生でした","学生だったない"],a:1,
+ x:"Noun + だ pattern: だ → じゃない → <b>じゃなかった</b>."},
+{c:"con",q:"学生",sub:"→ polite past negative",o:["学生じゃなかった","学生じゃありませんでした","学生でわない","学生ませんでした"],a:1,
+ x:"Polite chain: です → じゃありません → <b>じゃありませんでした</b>. じゃないです is the softer everyday version."},
+{c:"con",q:"作る",sub:"→ plain negative",o:["作ない","作らない","作りない","作れない"],a:1,
+ x:"る with /u/ before it (tsuku-<b>ru</b>) → u-verb → 作<b>ら</b>ない. Vowel before る is the giveaway."},
+{c:"con",q:"死ぬ",sub:"→ plain past",o:["死いた","死んだ","死った","死にた"],a:1,
+ x:"ぬ → <b>んだ</b>. 死ぬ is the only common verb ending in ぬ, so this rule only ever fires here."},
+{c:"con",q:"見る",sub:"→ polite past",o:["見りました","見ました","見いました","見たました"],a:1,
+ x:"ru-verb: drop る, add ました. 見<b>ました</b>. (Polite ます-form is Tae Kim Ch.4 — worth a look ahead.)"},
+{c:"con",q:"飲む",sub:"→ polite negative",o:["飲まません","飲みません","飲むません","飲んません"],a:1,
+ x:"u-verb polite: shift to the /i/ row, then ません. む → み → 飲<b>み</b>ません. Note the negative plain uses /a/ (飲まない), the polite uses /i/."},
+
+/* ---------- verb type ID ---------- */
+{c:"typ",q:"帰る",sub:"Which type?",o:["ru-verb","u-verb","irregular","not a verb"],a:1,
+ x:"A classic trap. え comes before る, which usually means ru-verb — but 帰る is one of the <b>u-verb</b> exceptions: 帰らない, 帰った."},
+{c:"typ",q:"見る",sub:"Which type?",o:["ru-verb","u-verb","irregular","な-adjective"],a:0,
+ x:"mi-ru: /i/ before る → <b>ru-verb</b>. Drop る and attach: 見ない, 見た."},
+{c:"typ",q:"分かる",sub:"Which type?",o:["ru-verb","u-verb","irregular","い-adjective"],a:1,
+ x:"waka-ru: /a/ before る → always a <b>u-verb</b>. 分からない, 分かった."},
+{c:"typ",q:"起きる",sub:"Which type?",o:["u-verb","ru-verb","irregular","noun"],a:1,
+ x:"oki-ru: /i/ before る → <b>ru-verb</b>. 起きない, 起きた, 起きなかった."},
+{c:"typ",q:"切る",sub:"Which type?",o:["ru-verb","u-verb","irregular","な-adjective"],a:1,
+ x:"ki-ru has /i/ before る, so it looks like a ru-verb — but it's a <b>u-verb</b> exception: 切らない, 切った. (見る is the honest one; 切る is not.)"},
+{c:"typ",q:"話す",sub:"Which type?",o:["ru-verb","u-verb","irregular","い-adjective"],a:1,
+ x:"It doesn't end in る, so it's a <b>u-verb</b> automatically. That rule has no exceptions."},
+{c:"typ",q:"きれい",sub:"Which type?",o:["い-adjective","な-adjective","ru-verb","noun only"],a:1,
+ x:"Ends in い, but it's a <b>な-adjective</b>: きれいな花, きれいじゃない. Same with 嫌(きら)い."},
+{c:"typ",q:"安い",sub:"Which type?",o:["い-adjective","な-adjective","u-verb","noun"],a:0,
+ x:"A real <b>い-adjective</b>: 安くない, 安かった, and it attaches straight to a noun — 安い本."},
+
+/* ---------- spot the error ---------- */
+{c:"err",q:"どれが正しい？",sub:"Which one is correct?",sm:1,o:["高いだ","高いです","高いだった","高いじゃない"],a:1,
+ x:"い-adjectives never take だ or じゃない. 高い alone is complete; <b>高いです</b> just adds politeness. Past is 高かった."},
+{c:"err",q:"どれが正しい？",sub:"Which one is correct?",sm:1,o:["誰は来た？","誰が来た？","誰も来た？","誰を来た？"],a:1,
+ x:"Question words as subject take <b>が</b>. 誰も来なかった is fine but means “nobody came” — different sentence."},
+{c:"err",q:"どれが正しい？",sub:"Which one is correct?",sm:1,o:["七時へ起きる","七時で起きる","七時に起きる","七時を起きる"],a:2,
+ x:"Time points take <b>に</b>. へ only ever expresses direction, で is the context of an action."},
+{c:"err",q:"どれが正しい？",sub:"Which one is correct?",sm:1,o:["私はも学生だ","私もは学生だ","私も学生だ","私はもう学生だも"],a:2,
+ x:"も <b>replaces</b> は — they can't share a slot. 私も学生だ = “I'm a student too”."},
+{c:"err",q:"どれが正しい？",sub:"Which one is correct?",sm:1,o:["静か部屋","静かな部屋","静かの部屋","静かい部屋"],a:1,
+ x:"な-adjectives need <b>な</b> to attach to a noun. At the end of a sentence they drop it: この部屋は静かだ."},
+{c:"err",q:"どれが正しい？",sub:"Which one is correct?",sm:1,o:["日本語を分かる","日本語が分かる","日本語に分かる","日本語で分かる"],a:1,
+ x:"分かる describes a state, so the thing understood is marked with <b>が</b>. Same for 好き, 嫌い, ある, いる."},
+{c:"err",q:"どれが正しい？",sub:"Which one is correct?",sm:1,o:["猫をいる","猫がいる","猫にいる","猫はいるだ"],a:1,
+ x:"いる takes no direct object — the thing existing is marked with <b>が</b>. And いる is a verb, so no だ after it."},
+{c:"err",q:"どれが正しい？",sub:"Which one is correct?",sm:1,o:["お金があらない","お金がありない","お金がない","お金がなくない"],a:2,
+ x:"ある's negative is simply <b>ない</b>. It's the one place ある misbehaves."},
+
+/* ---------- meaning ---------- */
+{c:"mea",q:"今日は寒くなかった。",sub:"What does it mean?",sm:1,
+ o:["It's cold today.","It wasn't cold today.","It isn't cold today.","It was cold today."],a:1,
+ x:"寒い → 寒<b>くなかった</b> = past negative. 今日は sets the topic: “as for today”."},
+{c:"mea",q:"猫がいない。",sub:"What does it mean?",sm:1,
+ o:["There's a cat.","I don't like cats.","There's no cat.","The cat left."],a:2,
+ x:"いる → い<b>ない</b>. Regular ru-verb. が marks the thing whose existence is being denied."},
+{c:"mea",q:"友達と映画を見た。",sub:"What does it mean?",sm:1,
+ o:["My friend watched a movie.","I watched a movie with a friend.","I showed a friend a movie.","I watched a friend's movie."],a:1,
+ x:"友達<b>と</b> = “with a friend”. If it were 友達<b>の</b>映画 it would be the friend's movie instead."},
+{c:"mea",q:"学生じゃなかった。",sub:"What does it mean?",sm:1,
+ o:["I'm not a student.","I wasn't a student.","I was a student.","I won't be a student."],a:1,
+ x:"だ → じゃない → <b>じゃなかった</b>: past negative of the state-of-being. Japanese has no future tense form."},
+{c:"mea",q:"本を読まなかった。",sub:"What does it mean?",sm:1,
+ o:["I didn't read the book.","I don't read books.","I read the book.","The book wasn't read."],a:0,
+ x:"読む → 読まない → 読ま<b>なかった</b>. u-verb: /a/ row + ない, then ない → なかった."},
+{c:"mea",q:"これは私のじゃない。",sub:"What does it mean?",sm:1,
+ o:["This isn't mine.","This is mine.","I don't want this.","This isn't a person."],a:0,
+ x:"の stands in for the noun (“my <i>one</i>”), then the whole thing takes the noun pattern じゃない."},
+{c:"mea",q:"部屋で本を読む。",sub:"What does it mean?",sm:1,
+ o:["There's a book in the room.","I read a book in the room.","I read the room's book.","I put a book in the room."],a:1,
+ x:"<b>で</b> = the place the action happens. Swap to に and you'd need an existence verb: 部屋に本がある."},
+{c:"mea",q:"日本語で話しませんでした。",sub:"What does it mean?",sm:1,
+ o:["I don't speak Japanese.","I didn't speak in Japanese.","I can't speak Japanese.","Japanese wasn't spoken to me."],a:1,
+ x:"ません + でした = polite past negative. で marks the medium: “in Japanese”."}
+];
+/* ============ SENTENCE-ENDING PARTICLES (Tae Kim 3.12.2–3.12.5) ============ */
+const ENDERS = [
+ { ch:"ね", name:"ne — seeking agreement", fn:"“…right? / isn't it?”", jlpt:"N5",
+   desc:"You attach ね when you expect the listener to <b>agree</b> with you. It softens a statement into something shared rather than announced.",
+   ex:[["いい天気(てんき)だ<b>ね</b>。","Nice weather, isn't it?"],
+       ["この本(ほん)は面白(おもしろ)い<b>ね</b>。","This book is interesting, don't you think?"]],
+   note:"After a noun or な-adjective, women's casual speech often drops だ: 元気(げんき)<b>ね</b>. Keeping だ (元気だね) is neutral." },
+ { ch:"よ", name:"yo — asserting", fn:"“I'm telling you”", jlpt:"N5",
+   desc:"よ marks information as <b>new to the listener</b>. It's how you correct, warn, or inform. Overusing it sounds pushy.",
+   ex:[["これは高(たか)い<b>よ</b>。","This is expensive, just so you know."],
+       ["もう行(い)った<b>よ</b>。","I already went."]],
+   warn:"Answering a superior's question with よ can sound blunt — you're telling them something they should have known." },
+ { ch:"よね", name:"yone — assert + confirm", fn:"“it's X, right?”", jlpt:"N5",
+   desc:"Both at once: you're fairly sure, and you want it confirmed. Very common when you're checking a fact you half-remember.",
+   ex:[["明日(あした)だ<b>よね</b>？","It's tomorrow, right?"],
+       ["学生(がくせい)じゃない<b>よね</b>？","You're not a student, are you?"]],
+   note:"Order is fixed: よね ✔ — ねよ ✗." }
+];
+
+/* ============ ADVERBS (3.12.1) ============ */
+const ADVERBS = {
+  intro:"Adjectives become adverbs with one small change, and unlike English they can move around the sentence fairly freely.",
+  rows:[
+    ["い-adjective","drop い → <b>く</b>","早(はや)い → 早<b>く</b>","早く食(た)べる = eat quickly"],
+    ["な-adjective","add <b>に</b>","静(しず)か → 静か<b>に</b>","静かに話(はな)す = speak quietly"],
+    ["noun","add <b>に</b>","本当(ほんとう) → 本当<b>に</b>","本当に高(たか)い = really expensive"]
+  ],
+  ex:[["部屋(へや)を綺麗(きれい)<b>に</b>した。","I made the room clean."],
+      ["昨日(きのう)は早(はや)<b>く</b>寝(ね)た。","I went to bed early yesterday."]],
+  note:"いい is irregular here too: いい → <b>よく</b>. よく食べる = eats a lot / eats well."
+};
+
+/* ============ TRANSITIVE / INTRANSITIVE (3.9) ============ */
+const TRANS_INTRO = {
+  lead:"English reuses one verb for both — “the door opens” and “I open the door”. Japanese uses <b>two separate verbs</b>, and the particle tells you which one you're looking at.",
+  core:[
+    ["他動詞 (たどうし)","transitive","someone does it <b>to</b> something","the doer + object <b>を</b>"],
+    ["自動詞 (じどうし)","intransitive","it happens <b>by itself</b>","the thing <b>が</b>, no を"]
+  ],
+  ex:[["ドア<b>を</b>開(あ)けた。","I opened the door. (transitive — I did it)"],
+      ["ドア<b>が</b>開(あ)いた。","The door opened. (intransitive — it just happened)"],
+      ["電気(でんき)<b>を</b>消(け)した。","I turned off the light."],
+      ["電気(でんき)<b>が</b>消(き)えた。","The light went out."]],
+  warn:"This is the fastest way to spot the difference: <b>if you see を, the verb is transitive.</b> An intransitive verb can never take を — the only exception is a space being passed through (公園を歩く).",
+  patterns:[
+    ["~ある","intransitive","始(はじ)まる · 閉(し)まる · 上(あ)がる · 決(き)まる · 集(あつ)まる"],
+    ["~える / ~ける","transitive","開(あ)ける · 閉(し)める · 上(あ)げる · 決(き)める · 集(あつ)める"],
+    ["~す","transitive","出(だ)す · 消(け)す · 直(なお)す · 落(お)とす · 壊(こわ)す"],
+    ["~れる","intransitive","壊(こわ)れる · 割(わ)れる · 折(お)れる · 取(と)れる"]
+  ],
+  pnote:"These are tendencies, not laws — but they're strong enough to guess with when you meet a new pair in よつばと！"
+};
+
+const TRANS = [
+ {en:"open", tr:["開ける","あける","ru-verb"], it:["開く","あく","u-verb"],
+  ex:[["窓(まど)<b>を</b>開(あ)ける。","I open the window."],["窓(まど)<b>が</b>開(あ)く。","The window opens."]]},
+ {en:"close", tr:["閉める","しめる","ru-verb"], it:["閉まる","しまる","u-verb"],
+  ex:[["ドア<b>を</b>閉(し)めた。","I closed the door."],["ドア<b>が</b>閉(し)まった。","The door closed."]]},
+ {en:"turn on / attach", tr:["付ける","つける","ru-verb"], it:["付く","つく","u-verb"],
+  ex:[["電気(でんき)<b>を</b>付(つ)ける。","I turn on the light."],["電気(でんき)<b>が</b>付(つ)く。","The light comes on."]]},
+ {en:"turn off / go out", tr:["消す","けす","u-verb"], it:["消える","きえる","ru-verb"],
+  ex:[["火(ひ)<b>を</b>消(け)した。","I put out the fire."],["火(ひ)<b>が</b>消(き)えた。","The fire went out."]],
+  note:"The reading changes too: 消(け)す vs 消(き)える."},
+ {en:"put in / enter", tr:["入れる","いれる","ru-verb"], it:["入る","はいる","u-verb"],
+  ex:[["鞄(かばん)に本(ほん)<b>を</b>入(い)れる。","I put the book in the bag."],["部屋(へや)に<b>入</b>(はい)る。","I enter the room."]],
+  note:"入(い)れる vs 入(はい)る — same kanji, different reading. 入る is also a u-verb exception."},
+ {en:"take out / exit", tr:["出す","だす","u-verb"], it:["出る","でる","ru-verb"],
+  ex:[["手紙(てがみ)<b>を</b>出(だ)す。","I send the letter out."],["家(いえ)<b>を</b>出(で)る。","I leave the house."]],
+  note:"出る is intransitive but still takes を for the place left behind — that's the space-traversal use, not an object."},
+ {en:"begin", tr:["始める","はじめる","ru-verb"], it:["始まる","はじまる","u-verb"],
+  ex:[["勉強(べんきょう)<b>を</b>始(はじ)める。","I start studying."],["映画(えいが)<b>が</b>始(はじ)まる。","The movie starts."]]},
+ {en:"finish", tr:["終える","おえる","ru-verb"], it:["終わる","おわる","u-verb"],
+  ex:[["宿題(しゅくだい)<b>を</b>終(お)える。","I finish the homework."],["授業(じゅぎょう)<b>が</b>終(お)わった。","Class ended."]],
+  note:"終わる is far more common in speech than 終える, even when there's an agent."},
+ {en:"drop / fall", tr:["落とす","おとす","u-verb"], it:["落ちる","おちる","ru-verb"],
+  ex:[["財布(さいふ)<b>を</b>落(お)とした。","I dropped my wallet."],["本(ほん)<b>が</b>落(お)ちた。","The book fell."]]},
+ {en:"break", tr:["壊す","こわす","u-verb"], it:["壊れる","こわれる","ru-verb"],
+  ex:[["時計(とけい)<b>を</b>壊(こわ)した。","I broke the watch."],["時計(とけい)<b>が</b>壊(こわ)れた。","The watch broke."]],
+  note:"Japanese strongly prefers the intransitive when nobody's blaming anyone — 壊れた, not “I broke it”."},
+ {en:"fix", tr:["直す","なおす","u-verb"], it:["直る","なおる","u-verb"],
+  ex:[["車(くるま)<b>を</b>直(なお)す。","I fix the car."],["車(くるま)<b>が</b>直(なお)った。","The car got fixed."]]},
+ {en:"change", tr:["変える","かえる","ru-verb"], it:["変わる","かわる","u-verb"],
+  ex:[["名前(なまえ)<b>を</b>変(か)える。","I change my name."],["天気(てんき)<b>が</b>変(か)わった。","The weather changed."]],
+  note:"変(か)える and 帰(かえ)る sound alike — different kanji, and 帰る is the u-verb exception."},
+ {en:"raise / rise", tr:["上げる","あげる","ru-verb"], it:["上がる","あがる","u-verb"],
+  ex:[["手(て)<b>を</b>上(あ)げる。","I raise my hand."],["値段(ねだん)<b>が</b>上(あ)がった。","The price went up."]]},
+ {en:"lower / go down", tr:["下げる","さげる","ru-verb"], it:["下がる","さがる","u-verb"],
+  ex:[["値段(ねだん)<b>を</b>下(さ)げる。","I lower the price."],["熱(ねつ)<b>が</b>下(さ)がった。","The fever went down."]]},
+ {en:"decide", tr:["決める","きめる","ru-verb"], it:["決まる","きまる","u-verb"],
+  ex:[["時間(じかん)<b>を</b>決(き)める。","I decide the time."],["時間(じかん)<b>が</b>決(き)まった。","The time was decided."]]},
+ {en:"gather", tr:["集める","あつめる","ru-verb"], it:["集まる","あつまる","u-verb"],
+  ex:[["切手(きって)<b>を</b>集(あつ)める。","I collect stamps."],["人(ひと)<b>が</b>集(あつ)まった。","People gathered."]]},
+ {en:"find", tr:["見つける","みつける","ru-verb"], it:["見つかる","みつかる","u-verb"],
+  ex:[["鍵(かぎ)<b>を</b>見(み)つけた。","I found the key."],["鍵(かぎ)<b>が</b>見(み)つかった。","The key turned up."]]}
+];
+
+/* ============ SENTENCE TAB: relative clauses, order, topic-marking, polite ============ */
+const BUN = [
+{
+ id:"rel", tab:"Relative clauses", title:"Clauses as adjectives", sub:"Tae Kim 3.10",
+ intro:"A whole clause can sit in front of a noun and describe it, exactly like an adjective would. English needs “that / which / who”; Japanese needs <b>nothing at all</b>.",
+ blocks:[
+  { lbl:"Verb clause + noun",
+    ex:[["買(か)った本(ほん)","the book [I] bought"],
+        ["昨日(きのう)買(か)った本(ほん)は面白(おもしろ)い。","The book I bought yesterday is interesting."],
+        ["魚(さかな)を食(た)べた猫(ねこ)","the cat that ate the fish"],
+        ["日本(にほん)に行(い)く人(ひと)","the person who is going to Japan"]],
+    note:"The clause must be in <b>plain form</b>. ✔ 買った本 — ✗ 買いました本." },
+  { lbl:"State-of-being clause + noun",
+    ex:[["学生(がくせい)<b>の</b>友達(ともだち)","a friend who is a student"],
+        ["学生(がくせい)<b>だった</b>友達(ともだち)","a friend who was a student"],
+        ["元気(げんき)<b>な</b>人(ひと)","a person who is well"],
+        ["静(しず)か<b>じゃない</b>部屋(へや)","a room that isn't quiet"]],
+    note:"だ can't sit directly before a noun. It turns into <b>の</b> (nouns) or <b>な</b> (な-adjectives). The other three forms — だった, じゃない, じゃなかった — attach unchanged." }
+ ],
+ warn:"Don't insert の after a verb clause. ✗ 買ったの本 → ✔ 買った本. The の only appears with the state-of-being.",
+ notes:["Inside the clause, the subject is usually marked with <b>が</b>, not は: 私<b>が</b>食べたケーキ = “the cake I ate”. は belongs to the main sentence, not the little one inside it."]
+},
+{
+ id:"ord", tab:"Sentence order", title:"Word order", sub:"Tae Kim 3.10.4",
+ intro:"Two rules do almost all the work: the <b>verb goes last</b>, and everything before it is held in place by its particle — so the order of those pieces is flexible.",
+ blocks:[
+  { lbl:"Same meaning, different order",
+    ex:[["私(わたし)は今日(きょう)学校(がっこう)で本(ほん)を読(よ)んだ。","I read a book at school today."],
+        ["今日(きょう)、私(わたし)は学校(がっこう)で本(ほん)を読(よ)んだ。","Today, I read a book at school."],
+        ["学校(がっこう)で今日(きょう)本(ほん)を読(よ)んだ。","(topic dropped) Read a book at school today."]],
+    note:"Because を marks the object and で marks the place, moving them around doesn't confuse anyone. This is why particles matter more than position." },
+  { lbl:"Modifiers come before what they modify",
+    ex:[["友達(ともだち)の犬(いぬ)の名前(なまえ)","my friend's dog's name — read it right to left"],
+        ["昨日(きのう)買(か)った赤(あか)い本(ほん)","the red book I bought yesterday"]],
+    note:"Everything piles up in front of the final noun. Find the last noun first, then unwrap backwards — this is the single most useful habit for reading よつばと！." }
+ ],
+ warn:"The one thing that can't move: the verb or state-of-being ends the sentence. Anything after it is a sentence-ending particle (ね, よ, か), not part of the clause."
+},
+{
+ id:"top", tab:"Topic tricks", title:"When location or object is the topic", sub:"Tae Kim 3.8.5–3.8.6",
+ intro:"は doesn't replace に or で — it <b>stacks on top of them</b>. But it does replace が and を entirely.",
+ blocks:[
+  { lbl:"Stacks: には · では · へは",
+    ex:[["東京(とうきょう)<b>には</b>行(い)った。","As for Tokyo, [I] went there. (contrast: but not Osaka)"],
+        ["ここ<b>では</b>食(た)べない。","Here, [we] don't eat."]],
+    note:"に + は = には. Keeping に preserves “to / at”; は adds “as for…”, usually with a hint of contrast." },
+  { lbl:"Replaces: が and を vanish",
+    ex:[["寿司(すし)<b>は</b>食(た)べた。","As for sushi, [I] ate it. (✗ 寿司をは)"],
+        ["猫(ねこ)<b>は</b>いる。","As for cats, there are some. (✗ 猫がは)"]],
+    note:"Same for も: 寿司<b>も</b>食べた ✔ / 寿司をも ✗." }
+ ],
+ warn:"This is why 魚(さかな)は食べない can mean “I don't eat fish” even though 魚 looks like the subject — it's the object, wearing は."
+},
+{
+ id:"pol", tab:"Polite form", title:"〜ます and です", sub:"Tae Kim 4.1 · next chapter",
+ intro:"The polite form doesn't change what a sentence means — only who you're comfortable saying it to. Everything else you've learned still applies underneath.",
+ blocks:[
+  { lbl:"Making the stem",
+    ex:[["ru-verb: 食(た)べる → 食べ → 食べ<b>ます</b>","drop る"],
+        ["u-verb: 飲(の)む → 飲み → 飲み<b>ます</b>","final /u/ → /i/"],
+        ["irregular: する → し<b>ます</b> ／ 来(く)る → 来(き)<b>ます</b>","memorise these two"]],
+    note:"Note the split: the <b>plain negative</b> uses the /a/ row (飲<b>ま</b>ない) but the <b>polite</b> uses the /i/ row (飲<b>み</b>ます). Different stems, easy to mix up." },
+  { lbl:"The four forms",
+    ex:[["飲(の)み<b>ます</b> ／ 飲み<b>ません</b>","drink / don't drink"],
+        ["飲(の)み<b>ました</b> ／ 飲み<b>ませんでした</b>","drank / didn't drink"]] },
+  { lbl:"です is not だ",
+    ex:[["高(たか)い<b>です</b> ✔ ／ 高いだ ✗","です attaches to い-adjectives; だ never can"],
+        ["学生(がくせい)<b>です</b> ／ 学生<b>じゃないです</b>","noun: です does behave like polite だ here"]],
+    note:"Treat です as a <b>politeness marker</b> you bolt onto the end, not as a polite version of だ. That's why 高いです works and 高いだ doesn't." }
+ ],
+ warn:"Relative clauses stay <b>plain</b> even in polite speech: 昨日買った本を読みました ✔ — 昨日買いました本 ✗. Politeness lives at the end of the sentence only."
+}
+];
+/* ---------- transitivity, clauses, sentence, polite, adverbs ---------- */
+QBANK.push(
+{c:"tra",q:"ドア＿開いた。",sub:"The door opened (on its own).",o:["を","が","に","で"],a:1,
+ x:"開(あ)く is <b>intransitive</b> — nothing did it, so there's no object. The thing that opened takes が. ✗ ドアを開いた"},
+{c:"tra",q:"ドア＿開けた。",sub:"I opened the door.",o:["が","を","に","へ"],a:1,
+ x:"開(あ)ける is <b>transitive</b> — I acted on the door, so it takes を. Seeing を is the fastest proof a verb is transitive."},
+{c:"tra",q:"電気を＿。",sub:"I turned off the light.",o:["消(き)えた","消(け)した","消(き)える","消(け)さない"],a:1,
+ x:"を demands a transitive verb → 消(け)す. 消(き)える would mean the light went out by itself, and it can't take を."},
+{c:"tra",q:"映画が＿。",sub:"The movie started.",o:["始(はじ)めた","始(はじ)まった","始(はじ)める","始(はじ)まる"],a:1,
+ x:"が + no agent → intransitive 始(はじ)まる, in the past → 始まった. 始(はじ)める would need を: 勉強を始めた."},
+{c:"tra",q:"時計が壊れた。",sub:"What does it mean?",sm:1,o:["I broke the watch.","The watch broke.","I fixed the watch.","The watch is broken by me."],a:1,
+ x:"壊(こわ)れる is intransitive. Japanese reaches for this by default when no one is being blamed — 壊した would point the finger at you."},
+{c:"tra",q:"落とす",sub:"Transitive or intransitive?",o:["transitive (takes を)","intransitive (takes が)","both","neither"],a:0,
+ x:"~す endings are almost always <b>transitive</b>: 落(お)とす, 消す, 出す, 直す, 壊す. Its partner 落ちる is the intransitive one."},
+{c:"tra",q:"集まる",sub:"Transitive or intransitive?",o:["transitive (takes を)","intransitive (takes が)","both","irregular"],a:1,
+ x:"~ある endings are almost always <b>intransitive</b>: 集(あつ)まる, 始まる, 閉まる, 決まる. The transitive partner is 集める."},
+{c:"tra",q:"鍵が見つかった。",sub:"What does it mean?",sm:1,o:["I found the key.","The key turned up.","I'm looking for the key.","The key is lost."],a:1,
+ x:"見(み)つかる is intransitive — the key showed up, no finder named. 見(み)つける would be 鍵<b>を</b>見つけた, “I found it”."},
+{c:"tra",q:"どれが正しい？",sub:"Which one is correct?",sm:1,o:["窓が閉めた","窓を閉まった","窓を閉めた","窓に閉めた"],a:2,
+ x:"閉(し)める is transitive → を. The intransitive version would be 窓<b>が</b>閉(し)まった, “the window closed”."},
+
+{c:"cla",q:"昨日買った本",sub:"What does it mean?",sm:1,o:["the book that bought yesterday","the book I bought yesterday","I bought a book yesterday","the book is bought"],a:1,
+ x:"A verb clause in plain form sits straight in front of the noun and describes it. No “that / which” needed — and no の."},
+{c:"cla",q:"どれが正しい？",sub:"Which one is correct?",sm:1,o:["買ったの本","買った本","買いました本","買うの本"],a:1,
+ x:"Verb clause + noun attaches bare: <b>買った本</b>. の only appears with the state-of-being (学生の友達), and the clause must be plain form, never ました."},
+{c:"cla",q:"学生＿友達",sub:"a friend who is a student",o:["だ","の","な","が"],a:1,
+ x:"だ can't sit in front of a noun — it becomes <b>の</b>. Past and negative forms attach unchanged: 学生だった友達, 学生じゃない友達."},
+{c:"cla",q:"元気＿人",sub:"a person who is well",o:["の","だ","な","に"],a:2,
+ x:"元気 is a な-adjective, so だ becomes <b>な</b> before a noun. Nouns take の, な-adjectives take な."},
+{c:"cla",q:"魚は食べない。",sub:"What does it mean?",sm:1,o:["The fish doesn't eat.","I don't eat fish.","Fish isn't food.","The fish isn't eaten by me."],a:1,
+ x:"は replaced を here, so 魚 is the <b>object</b> wearing a topic marker. 魚をは is ungrammatical — that's why the を disappears."},
+{c:"cla",q:"東京＿は行った。",sub:"As for Tokyo, I went there.",o:["に","を","が","—(nothing)"],a:0,
+ x:"は <b>stacks</b> on に and で (には, では) but <b>replaces</b> が and を. Keeping に preserves the “to Tokyo” meaning."},
+{c:"cla",q:"静か → ？",sub:"Make it an adverb: “speak quietly”",o:["静かく","静かに","静かで","静かの"],a:1,
+ x:"な-adjectives and nouns become adverbs with <b>に</b>: 静かに話す. い-adjectives use く instead."},
+{c:"cla",q:"早い → ？",sub:"Make it an adverb: “eat quickly”",o:["早に","早いに","早く","早くに"],a:2,
+ x:"い-adjectives drop い and add <b>く</b>: 早く食べる. Same move as the negative (早くない) — the く stem does double duty."},
+{c:"cla",q:"いい天気だ＿。",sub:"Nice weather, isn't it? (expecting agreement)",o:["よ","ね","か","の"],a:1,
+ x:"<b>ね</b> invites agreement. よ would assert it as news the listener didn't have, which is odd for weather you're both standing in."},
+{c:"cla",q:"これは高い＿。",sub:"This is expensive — I'm telling you.",o:["ね","よ","な","の"],a:1,
+ x:"<b>よ</b> marks information as new to the listener. Use it to inform, warn or correct."},
+{c:"cla",q:"明日だ＿？",sub:"It's tomorrow, right? (fairly sure, want confirmation)",o:["ねよ","よね","のね","かね"],a:1,
+ x:"<b>よね</b> = assert + confirm. The order is fixed — ねよ doesn't exist."},
+{c:"cla",q:"飲む",sub:"→ polite past negative",o:["飲まなかった","飲みませんでした","飲まませんでした","飲みなかった"],a:1,
+ x:"Polite stem uses the /i/ row: 飲<b>み</b> → ません → <b>ませんでした</b>. The plain negative uses /a/ (飲まない) — different stems."},
+{c:"cla",q:"どれが正しい？",sub:"Which one is correct?",sm:1,o:["昨日買いました本を読みました","昨日買った本を読みました","昨日買った本を読んだです","昨日買いました本を読んだ"],a:1,
+ x:"Politeness lives only at the <b>end</b> of the sentence. The relative clause stays plain: 買った本. And 読んだです isn't a thing."},
+{c:"cla",q:"来る",sub:"→ polite (non-past)",o:["来ます (きます)","来ます (くます)","来ります (きります)","来ります (こります)"],a:0,
+ x:"来る shifts reading again: 来ます = <b>きます</b>. The set is くる / こない / きた / きます — worth memorising as a block."}
+);
+/* ==================== HELPERS ==================== */
+const $ = s => document.querySelector(s);
+const el = (t,c,h) => { const n=document.createElement(t); if(c)n.className=c; if(h!=null)n.innerHTML=h; return n; };
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; };
+
+/* ==================== TABS ==================== */
+document.querySelectorAll('.tab').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    ['par','tra','con','bun','kan','voc','dri'].forEach(id=>
+      $('#t-'+id).classList.toggle('hidden', id!==b.dataset.tab));
+    window.scrollTo(0,0);
+  });
+});
+
+/* ==================== PARTICLES ==================== */
+(function(){
+  const list=$('#par-list');
+  PARTICLES.forEach((p,i)=>{
+    const c=el('div','card');
+    const head=el('div','par',
+      `<div class="par-ch">${p.ch}</div>
+       <div style="flex:1;min-width:0">
+         <div class="par-nm">${p.name}</div>
+         <div class="par-fn">${p.fn}</div>
+       </div>
+       <span class="pill p-n5">${p.jlpt}</span>`);
+    const body=el('div','par-body hidden');
+    let h=`<div class="par-desc">${p.desc}</div>`;
+    p.ex.forEach(e=>h+=`<div class="ex"><div class="jp">${e[0]}</div><div class="en">${e[1]}</div></div>`);
+    if(p.note) h+=`<div class="note">${p.note}</div>`;
+    if(p.warn) h+=`<div class="warn">${p.warn}</div>`;
+    body.innerHTML=h;
+    head.addEventListener('click',()=>{
+      body.classList.toggle('hidden');
+      c.classList.toggle('open',!body.classList.contains('hidden'));
+    });
+    c.appendChild(head); c.appendChild(body); list.appendChild(c);
+  });
+
+  const pe=$('#par-end');
+  ENDERS.forEach(p=>{
+    const c=el('div','card');
+    const head=el('div','par',
+      `<div class="par-ch">${p.ch}</div>
+       <div style="flex:1;min-width:0">
+         <div class="par-nm">${p.name}</div>
+         <div class="par-fn">${p.fn}</div>
+       </div>
+       <span class="pill p-n5">${p.jlpt}</span>`);
+    const body=el('div','par-body hidden');
+    let h=`<div class="par-desc">${p.desc}</div>`;
+    p.ex.forEach(e=>h+=`<div class="ex"><div class="jp">${e[0]}</div><div class="en">${e[1]}</div></div>`);
+    if(p.note) h+=`<div class="note">${p.note}</div>`;
+    if(p.warn) h+=`<div class="warn">${p.warn}</div>`;
+    body.innerHTML=h;
+    head.addEventListener('click',()=>{body.classList.toggle('hidden');c.classList.toggle('open',!body.classList.contains('hidden'));});
+    c.appendChild(head); c.appendChild(body); pe.appendChild(c);
+  });
+  {
+    let h=`<div class="lbl">Adverbs · 3.12.1</div><div style="font-size:13.5px;color:var(--muted);line-height:1.7">${ADVERBS.intro}</div>`;
+    h+='<table class="tbl"><tr><th>From</th><th>Change</th><th>Example</th></tr>';
+    ADVERBS.rows.forEach(r=>h+=`<tr><td>${r[0]}</td><td style="font-size:12px;color:var(--muted)">${r[1]}</td><td><span class="f">${r[2]}</span><span class="r" style="color:var(--muted)">${r[3]}</span></td></tr>`);
+    h+='</table>';
+    ADVERBS.ex.forEach(e=>h+=`<div class="ex"><div class="jp">${e[0]}</div><div class="en">${e[1]}</div></div>`);
+    h+=`<div class="note">${ADVERBS.note}</div>`;
+    pe.appendChild(el('div','card',h));
+  }
+
+  const pl=$('#par-pairs');
+  PAIRS.forEach(p=>{
+    pl.appendChild(el('div','card',
+      `<div class="lbl">${p.t}</div>
+       <div class="ex"><div class="jp">${p.a[0]}</div><div class="en">${p.a[1]}</div></div>
+       <div class="ex"><div class="jp">${p.b[0]}</div><div class="en">${p.b[1]}</div></div>
+       <div class="note"><b>Rule of thumb:</b> ${p.k}</div>`));
+  });
+})();
+
+/* ==================== CONJUGATION ==================== */
+(function(){
+  const chips=$('#con-chips'), body=$('#con-body');
+  let cur=0;
+  const table=(rows,head)=>{
+    let h=`<table class="tbl"><tr><th>${head}</th><th>Form</th><th>Meaning</th></tr>`;
+    rows.forEach(r=>{
+      h+=`<tr><td>${r[0]}</td><td><span class="f">${r[1]}</span><span class="r">${r[2]}</span></td><td style="color:var(--muted);font-size:12px">${r[3]}</td></tr>`;
+    });
+    return h+'</table>';
+  };
+  function render(){
+    const s=CONJ[cur];
+    let h=`<div class="shead"><span class="seal">活</span><h2>${s.title}</h2><span class="rule"></span><span class="sub">${s.sub}</span></div>`;
+    h+=`<div class="card"><div style="font-size:13.5px;color:var(--muted);line-height:1.7">${s.intro}</div>`;
+    h+=table(s.rows,'Plain');
+    h+='</div>';
+    if(s.rows2) h+=`<div class="card"><div class="lbl">Polite forms</div>${table(s.rows2,'Polite')}</div>`;
+    if(s.past){
+      h+=`<div class="card"><div class="lbl">Past-tense sound changes</div>
+          <table class="tbl"><tr><th>Ends in</th><th>Past</th><th>Example</th></tr>`;
+      s.past.forEach(r=>h+=`<tr><td><span class="f">${r[0]}</span></td><td><span class="f" style="color:var(--matcha)">${r[1]}</span></td><td class="f" style="font-size:14px">${r[2]}</td></tr>`);
+      h+=`</table><div class="note">Past negative is always the same move: take the ない form and swap ない → <b>なかった</b>.</div></div>`;
+    }
+    h+='<div class="card"><div class="lbl">In a sentence</div>';
+    s.ex.forEach(e=>h+=`<div class="ex"><div class="jp">${e[0]}</div><div class="en">${e[1]}</div></div>`);
+    (s.notes||[]).forEach(n=>h+=`<div class="note">${n}</div>`);
+    if(s.warn) h+=`<div class="warn">${s.warn}</div>`;
+    h+='</div>';
+    body.innerHTML=h;
+    [...chips.children].forEach((c,i)=>c.classList.toggle('on',i===cur));
+  }
+  CONJ.forEach((s,i)=>{
+    const b=el('button','chip'+(i===0?' on':''),s.tab);
+    b.addEventListener('click',()=>{cur=i;render();});
+    chips.appendChild(b);
+  });
+  render();
+})();
+
+/* ==================== TRANSITIVITY ==================== */
+(function(){
+  const T=TRANS_INTRO, intro=$('#tra-intro');
+  let h=`<div class="card"><div style="font-size:13.5px;color:var(--muted);line-height:1.7">${T.lead}</div>`;
+  h+='<table class="tbl"><tr><th>Term</th><th>Means</th><th>Particle</th></tr>';
+  T.core.forEach(r=>h+=`<tr><td style="width:auto"><span class="f" style="font-size:14px">${r[0]}</span><span class="r">${r[1]}</span></td><td style="font-size:12.5px;color:var(--muted)">${r[2]}</td><td style="font-size:12.5px">${r[3]}</td></tr>`);
+  h+='</table>';
+  T.ex.forEach(e=>h+=`<div class="ex"><div class="jp">${e[0]}</div><div class="en">${e[1]}</div></div>`);
+  h+=`<div class="warn">${T.warn}</div></div>`;
+  h+='<div class="card"><div class="lbl">Endings that give it away</div><table class="tbl"><tr><th>Ending</th><th>Usually</th><th>Examples</th></tr>';
+  T.patterns.forEach(r=>{
+    const col=r[1]==='transitive'?'var(--shu)':'var(--matcha)';
+    h+=`<tr><td><span class="f">${r[0]}</span></td><td style="font-size:11.5px;color:${col};font-weight:700">${r[1]}</td><td class="f" style="font-size:13px">${r[2]}</td></tr>`;
+  });
+  h+=`</table><div class="note">${T.pnote}</div></div>`;
+  intro.innerHTML=h;
+
+  const list=$('#tra-list');
+  TRANS.forEach(v=>{
+    const c=el('div','card');
+    const head=el('div','par',
+      `<div style="flex:1;min-width:0">
+         <div style="font-family:var(--jp);font-size:19px;font-weight:600">
+           <span style="color:var(--shu)">${v.tr[0]}</span>
+           <span style="color:var(--dim);font-size:14px"> / </span>
+           <span style="color:var(--matcha)">${v.it[0]}</span>
+         </div>
+         <div class="par-fn">${v.en}</div>
+       </div>
+       <span class="pill p-shu">を / が</span>`);
+    const body=el('div','par-body hidden');
+    let b='<table class="tbl"><tr><th>Type</th><th>Verb</th><th>Class</th></tr>';
+    b+=`<tr><td style="color:var(--shu)">transitive</td><td><span class="f">${v.tr[0]}</span><span class="r">${v.tr[1]}</span></td><td style="font-size:11.5px;color:var(--muted)">${v.tr[2]}</td></tr>`;
+    b+=`<tr><td style="color:var(--matcha)">intransitive</td><td><span class="f">${v.it[0]}</span><span class="r">${v.it[1]}</span></td><td style="font-size:11.5px;color:var(--muted)">${v.it[2]}</td></tr></table>`;
+    v.ex.forEach(e=>b+=`<div class="ex"><div class="jp">${e[0]}</div><div class="en">${e[1]}</div></div>`);
+    if(v.note) b+=`<div class="note">${v.note}</div>`;
+    body.innerHTML=b;
+    head.addEventListener('click',()=>{body.classList.toggle('hidden');c.classList.toggle('open',!body.classList.contains('hidden'));});
+    c.appendChild(head); c.appendChild(body); list.appendChild(c);
+  });
+})();
+
+/* ==================== SENTENCE ==================== */
+(function(){
+  const chips=$('#bun-chips'), body=$('#bun-body');
+  let cur=0;
+  function render(){
+    const s=BUN[cur];
+    let h=`<div class="shead"><span class="seal">文</span><h2>${s.title}</h2><span class="rule"></span><span class="sub">${s.sub}</span></div>`;
+    h+=`<div class="card"><div style="font-size:13.5px;color:var(--muted);line-height:1.7">${s.intro}</div></div>`;
+    s.blocks.forEach(b=>{
+      h+=`<div class="card"><div class="lbl">${b.lbl}</div>`;
+      b.ex.forEach(e=>h+=`<div class="ex"><div class="jp">${e[0]}</div><div class="en">${e[1]}</div></div>`);
+      if(b.note) h+=`<div class="note">${b.note}</div>`;
+      h+='</div>';
+    });
+    if(s.notes||s.warn){
+      h+='<div class="card">';
+      (s.notes||[]).forEach(n=>h+=`<div class="note">${n}</div>`);
+      if(s.warn) h+=`<div class="warn">${s.warn}</div>`;
+      h+='</div>';
+    }
+    body.innerHTML=h;
+    [...chips.children].forEach((c,i)=>c.classList.toggle('on',i===cur));
+  }
+  BUN.forEach((s,i)=>{
+    const b=el('button','chip'+(i===0?' on':''),s.tab);
+    b.addEventListener('click',()=>{cur=i;render();window.scrollTo(0,0);});
+    chips.appendChild(b);
+  });
+  render();
+})();
+
+/* ==================== KANJI ==================== */
+(function(){
+  const PER=12; let page=0, flipped={};
+  const grid=$('#k-grid'), info=$('#k-info'), words=$('#k-words');
+  const pages=Math.ceil(N5_KANJI.length/PER);
+  function render(){
+    const slice=N5_KANJI.slice(page*PER,(page+1)*PER);
+    info.textContent=`${page*PER+1}–${Math.min((page+1)*PER,N5_KANJI.length)} / ${N5_KANJI.length}`;
+    grid.innerHTML=''; words.innerHTML='';
+    slice.forEach((k,i)=>{
+      const id=page*PER+i, on=flipped[id];
+      const c=el('div','kc'+(on?' flip':''),
+        on ? `<div class="kf">${k.kanji}</div>
+              <div class="ko">音 ${k.on}</div>
+              <div class="kk">訓 ${k.kun}</div>
+              <div class="km">${k.meaning}</div>`
+           : `<div class="kf">${k.kanji}</div>`);
+      c.addEventListener('click',()=>{flipped[id]=!flipped[id];render();});
+      grid.appendChild(c);
+    });
+    const openIds=slice.map((_,i)=>page*PER+i).filter(i=>flipped[i]);
+    if(openIds.length){
+      words.appendChild(el('div','lbl','Words using these'));
+      openIds.forEach(i=>{
+        const k=N5_KANJI[i];
+        words.appendChild(el('div','card',
+          `<div style="font-family:var(--jp);font-size:20px;font-weight:700;margin-bottom:6px">${k.kanji} <span style="font-size:12px;color:var(--muted);font-family:var(--ui);font-weight:400">${k.meaning}</span></div>`+
+          k.words.map(w=>`<div style="font-size:13px;color:#B3BCCA;padding:5px 0;border-top:1px solid var(--line);font-family:var(--jp)">${w}</div>`).join('')));
+      });
+    } else {
+      words.appendChild(el('div','card','<div style="font-size:13px;color:var(--muted);line-height:1.7">Tap a card to flip it. Readings and example words appear below.<br><span style="color:var(--ai)">音</span> = on\'yomi (Chinese-derived) · <span style="color:var(--matcha)">訓</span> = kun\'yomi (native Japanese)</div>'));
+    }
+    $('#k-prev').disabled=page===0;
+    $('#k-next').disabled=page>=pages-1;
+  }
+  $('#k-prev').addEventListener('click',()=>{if(page>0){page--;render();window.scrollTo(0,0);}});
+  $('#k-next').addEventListener('click',()=>{if(page<pages-1){page++;render();window.scrollTo(0,0);}});
+  render();
+})();
+
+/* ==================== VOCAB ==================== */
+(function(){
+  const FIL=[["all","All"],["verb","Verbs"],["adj","Adjectives"],["Noun","Nouns"],["Question word","Question words"]];
+  let f="all", open={};
+  const chips=$('#v-chips'), list=$('#v-list'), count=$('#v-count');
+  const COL={ "ru-verb":"--ai","u-verb":"--ai","irregular":"--shu","u-verb (irregular neg.)":"--shu",
+              "い-adjective":"--matcha","な-adjective":"--matcha","Noun":"--muted","Question word":"--kincha" };
+  const get=()=>f==="all"?VOCAB
+    :f==="verb"?VOCAB.filter(v=>v.t.includes("verb")||v.t==="irregular")
+    :f==="adj" ?VOCAB.filter(v=>v.t.includes("adjective"))
+    :VOCAB.filter(v=>v.t===f);
+  function render(){
+    const d=get();
+    count.textContent=`${d.length} words`;
+    list.innerHTML='';
+    d.forEach((v,i)=>{
+      const key=f+i, isOpen=open[key], col=`var(${COL[v.t]||"--muted"})`;
+      const c=el('div','vi'+(isOpen?' open':''),
+        `<div class="vi-top">
+           <div style="min-width:0"><span class="vi-w">${v.w}</span><span class="vi-r">${v.r}</span></div>
+           <span class="pill" style="color:${col};border-color:${col}55;background:${col}14">${v.t}</span>
+         </div>`+
+        (isOpen?`<div class="vi-m">${v.m}</div>
+           <div class="ex"><div class="jp" style="font-size:15px">${v.e}</div></div>
+           ${v.n?`<div class="note">${v.n}</div>`:''}`:''));
+      c.addEventListener('click',()=>{open[key]=!open[key];render();});
+      list.appendChild(c);
+    });
+  }
+  FIL.forEach(([k,lab])=>{
+    const b=el('button','chip'+(k==="all"?' on':''),lab);
+    b.addEventListener('click',()=>{f=k;open={};[...chips.children].forEach(c=>c.classList.remove('on'));b.classList.add('on');render();});
+    chips.appendChild(b);
+  });
+  render();
+})();
+
+/* ==================== DRILLS ==================== */
+(function(){
+  const CATS=[["all","Everything"],["par","Particles"],["con","Conjugation"],["typ","Verb type"],["tra","Trans/Intr"],["cla","Sentence"],["err","Spot the error"],["mea","Meaning"],["kan","Kanji"]];
+  let cat="all", queue=[], q=null, answered=false;
+  let right=0, wrong=0, streak=0;
+  const chips=$('#d-chips'), stage=$('#d-stage');
+
+  /* auto-generate kanji questions so this set never runs dry */
+  function kanjiQ(){
+    const k=N5_KANJI[Math.random()*N5_KANJI.length|0];
+    const meaning=Math.random()<0.5;
+    const pool=shuffle(N5_KANJI.filter(x=>x.kanji!==k.kanji)).slice(0,3);
+    if(meaning){
+      const opts=shuffle([k.meaning,...pool.map(x=>x.meaning)]);
+      return {c:"kan",q:k.kanji,sub:"What does it mean?",o:opts,a:opts.indexOf(k.meaning),
+        x:`<b>${k.kanji}</b> = ${k.meaning}. 音 ${k.on} · 訓 ${k.kun}<br><span class="jpx">${k.words[0]}</span>`};
+    }
+    const opts=shuffle([k.on,...pool.map(x=>x.on)]);
+    return {c:"kan",q:k.kanji,sub:"Which is its on'yomi (音読み)?",o:opts,a:opts.indexOf(k.on),
+      x:`<b>${k.kanji}</b> — 音 ${k.on} · 訓 ${k.kun} · ${k.meaning}<br><span class="jpx">${k.words[0]}</span>`};
+  }
+
+  function refill(){
+    if(cat==="kan"){ queue=Array.from({length:20},kanjiQ); return; }
+    let pool=cat==="all"?QBANK.slice():QBANK.filter(x=>x.c===cat);
+    if(cat==="all") pool=pool.concat(Array.from({length:10},kanjiQ));
+    queue=shuffle(pool);
+  }
+  function next(){
+    if(!queue.length) refill();
+    q=queue.pop(); answered=false; render();
+  }
+  function render(){
+    const label={par:"Particle",con:"Conjugation",typ:"Verb type",tra:"Transitive / intransitive",cla:"Sentence structure",err:"Spot the error",mea:"Meaning",kan:"Kanji"}[q.c];
+    const card=el('div','qcard',
+      `<div class="qtag">${label}</div>
+       <div class="qtext${q.sm?' sm':''}">${q.q}</div>
+       <div class="qsub">${q.sub}</div>`);
+    stage.innerHTML=''; stage.appendChild(card);
+    const box=el('div');
+    q.o.forEach((o,i)=>{
+      const b=el('button','opt',o);
+      b.addEventListener('click',()=>pick(i,box));
+      box.appendChild(b);
+    });
+    stage.appendChild(box);
+  }
+  function pick(i,box){
+    if(answered) return; answered=true;
+    const ok=i===q.a;
+    ok?(right++,streak++):(wrong++,streak=0);
+    $('#d-right').textContent=right; $('#d-wrong').textContent=wrong; $('#d-streak').textContent=streak;
+    [...box.children].forEach((b,j)=>{
+      b.disabled=true;
+      if(j===q.a) b.classList.add('good');
+      else if(j===i) b.classList.add('bad');
+      else b.classList.add('fade');
+    });
+    const e=el('div','expl',
+      `<div style="margin-bottom:6px;font-weight:700;color:${ok?'var(--matcha)':'var(--shu)'}">${ok?'正解 — correct':'違う — not quite'}</div>${q.x}`);
+    stage.appendChild(e);
+    const n=el('button','btn','Next →');
+    n.addEventListener('click',()=>{next();window.scrollTo(0,0);});
+    stage.appendChild(n);
+    e.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+  CATS.forEach(([k,lab])=>{
+    const b=el('button','chip'+(k==="all"?' on':''),lab);
+    b.addEventListener('click',()=>{
+      cat=k; [...chips.children].forEach(c=>c.classList.remove('on')); b.classList.add('on');
+      refill(); next(); window.scrollTo(0,0);
+    });
+    chips.appendChild(b);
+  });
+  refill(); next();
+})();
+
+</script>
+</body>
+</html>
